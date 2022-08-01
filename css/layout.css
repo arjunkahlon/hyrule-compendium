@@ -7,6 +7,10 @@
   flex-basis: 100%;
 }
 
+.col-fluid {
+  flex-basis: auto;
+}
+
 .col-img {
   flex-basis: calc(100%/6);
 }
@@ -36,6 +40,10 @@
 .center {
   justify-content: center;
   align-items: center;
+}
+
+.space-between {
+  justify-content: space-between;
 }
 
 .wrap {
