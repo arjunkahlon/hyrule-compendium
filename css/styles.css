@@ -1,0 +1,36 @@
+.entry {
+  margin: 6rem;
+}
+
+.entry-container {
+  margin: 4rem;
+}
+
+.entry-wrapper {
+  margin: 0.2rem;
+}
+
+.background-black {
+  background-color: black;
+}
+
+/* Image Selectors */
+
+.col-img-wrapper > img {
+  width: 100%;
+  border-radius: 10%;
+}
+
+/* Text Selectors */
+
+.text-center {
+  text-align: center;
+}
+
+.text-gold {
+  color: rgb(224, 209, 173);
+}
+
+.text-blue {
+  color: rgb(135, 164, 206);
+}
