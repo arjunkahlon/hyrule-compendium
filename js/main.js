@@ -16,12 +16,20 @@ function addEventList(list, event, fnct) {
   }
 }
 
-// Event Handler Functionality
+// Navigation Functionality
 function navigationClick(event) {
   if (event.target.className !== 'nav-icon') {
     return;
   }
+  data.currentNavIcon.classList.remove('nav-icon-selected');
+  data.currentNavIcon = event.target;
+  data.currentNavIcon.classList.add('nav-icon-selected');
   renderSwap(event.target.id);
+}
+
+function renderSwap(category) {
+  data.pageView = category;
+  renderEntries(data[category]);
 }
 
 // API Functionality
@@ -56,6 +64,7 @@ function getCreatures() {
     });
 
     // Render creatures entries on page load by defualt
+    data.currentNavIcon = $navigationIcons[0];
     renderEntries(data.creatures);
   });
   creatureRequest.send();
@@ -191,8 +200,8 @@ function renderEntry(obj) {
           ]),
           createElement('div', { class: 'col-name' }, [
             createElement('div', { class: 'col-name-wrapper' }, [
-              createElement('h3', { class: 'text-gold' }, [obj.name]),
-              createElement('p', { class: 'text-blue' }, [obj.id])
+              createElement('h3', { class: 'text-gold hylia-font' }, [obj.name]),
+              createElement('p', { class: 'text-blue hylia-font' }, [obj.id])
             ])
           ])
         ])
@@ -216,11 +225,4 @@ function removeAllChildren(parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
   }
-}
-
-// Navigation Functionality
-
-function renderSwap(category) {
-  data.pageView = category;
-  renderEntries(data[category]);
 }

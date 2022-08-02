@@ -1,6 +1,7 @@
 /* exported data */
 var data = {
   pageView: 'creatures',
+  currentNavIcon: null,
   entryView: null,
   favorites: [],
   compendium: [],
