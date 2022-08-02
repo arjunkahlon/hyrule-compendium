@@ -29,8 +29,8 @@
 }
 
 .nav-icon-wrapper > img {
-  width: 60px;
-  height: 60px;
+  width: 65px;
+  height: 65px;
 }
 
 .nav-selected {
@@ -44,7 +44,7 @@
 }
 
 .entry-container {
-  margin: 2rem 4rem;
+  margin: 2rem;
 }
 
 .entry-wrapper {
@@ -54,7 +54,8 @@
 /* Image Styling */
 
 .col-img-wrapper > img {
-  width: 100%;
+  width: 70px;
+  height: 70px;
   border-radius: 10%;
 }
 

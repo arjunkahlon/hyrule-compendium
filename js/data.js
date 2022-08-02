@@ -3,6 +3,7 @@ var data = {
   pageView: 'creature-view',
   entryView: null,
   favorites: [],
+  compendium: [],
   creatures: [],
   monsters: [],
   materials: [],
