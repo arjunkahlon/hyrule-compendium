@@ -1,6 +1,6 @@
 /* exported data */
 var data = {
-  pageView: 'creature-view',
+  pageView: 'creatures',
   entryView: null,
   favorites: [],
   compendium: [],

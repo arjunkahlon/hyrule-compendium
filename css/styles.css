@@ -38,17 +38,12 @@
 }
 
 /* Entry Styling */
-
-.entry {
-  margin: 6rem;
-}
-
-.entry-container {
-  margin: 2rem;
+#entry-container {
+  padding: 0 1rem;
 }
 
 .entry-wrapper {
-  margin: 0.2rem;
+  margin: 0.4rem;
 }
 
 /* Image Styling */

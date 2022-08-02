@@ -4,8 +4,27 @@ getMaterials();
 getEquipment();
 getTreasure();
 
-var $entryHead = document.querySelector('#entry-head');
-// var $navigationIcons = document.querySelectorAll('.nav-icon');
+var $entryRow = document.querySelector('#entry-row');
+
+var $navigationIcons = document.querySelectorAll('.nav-icon');
+addEventList($navigationIcons, 'click', navigationClick);
+
+// General Event Functionality
+function addEventList(list, event, fnct) {
+  for (let i = 0; i < list.length; i++) {
+    list[i].addEventListener(event, fnct);
+  }
+}
+
+// Event Handler Functionality
+function navigationClick(event) {
+  if (event.target.className !== 'nav-icon') {
+    return;
+  }
+  renderSwap(event.target.id);
+}
+
+// API Functionality
 
 function getCreatures() {
   var creatureRequest = new XMLHttpRequest();
@@ -75,7 +94,7 @@ function getMaterials() {
     for (let i = 0; i < materialRequest.response.data.length; i++) {
       data.materials.push(materialRequest.response.data[i]);
       data.materialsAlph.push(materialRequest.response.data[i]);
-      data.creatures.push(materialRequest.response.data[i]);
+      data.compendium.push(materialRequest.response.data[i]);
     }
     data.materials.sort(function (a, b) {
       return a.id - b.id;
@@ -143,6 +162,8 @@ function getTreasure() {
   treasureRequest.send();
 }
 
+// Dom Functionality
+
 function createElement(tagName, attributes, children) {
   var $element = document.createElement(tagName);
   for (var name in attributes) {
@@ -160,7 +181,7 @@ function createElement(tagName, attributes, children) {
 
 function renderEntry(obj) {
   var $compendiumEntry =
-    createElement('div', { class: 'col-full col-sm-half col-md-third col-lg-fourth' }, [
+    createElement('div', { class: 'col-full col-sm-half col-md-third col-lg-fourth', id: 'entry-container' }, [
       createElement('div', { class: 'entry-wrapper' }, [
         createElement('div', { class: 'row' }, [
           createElement('div', { class: 'col-img' }, [
@@ -181,25 +202,25 @@ function renderEntry(obj) {
 }
 
 function renderEntries(entryArr) {
+  if ($entryRow.childElementCount !== 0) {
+    removeAllChildren($entryRow);
+  }
   for (let i = 0; i < entryArr.length; i++) {
-    $entryHead.appendChild(renderEntry(entryArr[i]));
+    $entryRow.appendChild(renderEntry(entryArr[i]));
   }
 }
 
-/* <div class="col-full col-sm-half col-md-third col-lg-fourth">
-  <div class="entry-wrapper">
-    <div class="row">
-      <div class="col-img">
-        <div class="col-img-wrapper">
-          <img src="./images/horse.png" alt="horse">
-        </div>
-      </div>
-      <div class="col-name">
-        <div class="col-name-wrapper">
-          <h3 class="text-gold">Horse</h3>
-          <p class="text-blue">001</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> */
+// General Dom Functionality
+
+function removeAllChildren(parent) {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+}
+
+// Navigation Functionality
+
+function renderSwap(category) {
+  data.pageView = category;
+  renderEntries(data[category]);
+}
