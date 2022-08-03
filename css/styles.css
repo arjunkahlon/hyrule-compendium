@@ -1,8 +1,17 @@
+/* HTML */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Header Styling */
 
 .nav-header {
   padding: 1rem;
   border-bottom: 1px solid rgb(224, 209, 173);
+  height: 62px;
+  position: fixed;
+  width: 100%;
+  top: 0;
 }
 
 #header-name {
@@ -36,19 +45,28 @@
 
 .nav-icon-selected {
   transform: scale(1.2);
-  box-shadow: -1px 1px 16px 10px rgba(26, 112, 185, 0.85);
+  box-shadow: -1px 1px 16px 8px rgba(26, 112, 185, 0.85);
 }
 
 #navigation-icons {
   padding-top: 1rem;
+  height: 82px;
+  position: fixed;
+  width: 100%;
+  top: 3.9rem;
 }
 
 .nav-icon-wrapper > img {
-  width: 52px;
-  height: 40px;
+  width: 47px;
+  height: 36px;
 }
 
 /* Entry Styling */
+
+.compendium-entries {
+  margin-top: 145px;
+}
+
 #rendered-entries {
   margin: 1rem;
 }
