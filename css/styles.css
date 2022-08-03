@@ -25,18 +25,27 @@
 
 /* Navigation Icon Styling */
 
+.nav-icon {
+  margin: 0.5rem;
+  transition: transform 0.5s ease;
+}
+
+.nav-icon:hover {
+  transform: scale(1.2);
+}
+
+.nav-icon-selected {
+  transform: scale(1.2);
+  box-shadow: -1px 1px 16px 10px rgba(26, 112, 185, 0.85);
+}
+
 #navigation-icons {
   padding-top: 1rem;
 }
 
 .nav-icon-wrapper > img {
-  width: 65px;
-  height: 65px;
-}
-
-.nav-icon-selected {
-  background-color: rgba(224, 209, 173, 0.793);
-  border-radius: 30%;
+  width: 52px;
+  height: 40px;
 }
 
 /* Entry Styling */
