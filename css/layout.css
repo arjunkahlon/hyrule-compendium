@@ -1,0 +1,85 @@
+/* Desktop Layout */
+.row {
+  display: flex;
+}
+
+.col-full {
+  flex-basis: 100%;
+}
+
+.col-fluid {
+  flex-basis: auto;
+}
+
+.col-img {
+  flex-basis: calc(100%/6);
+}
+
+.col-img-wrapper {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.col-name {
+  flex-basis: calc(500%/6);
+}
+
+.col-name-wrapper {
+  line-height: 0;
+  margin: 1rem;
+}
+
+/* Containers */
+
+.entry-container {
+  max-width: 90%;
+}
+
+/* Utility Flex */
+
+.center {
+  justify-content: center;
+  align-items: center;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+/* Utility */
+
+.block {
+  display: block;
+}
+
+.in-line {
+  display: inline;
+}
+
+.in-line-block {
+  display: inline-block;
+}
+
+/* Media Queries */
+
+@media only screen and (min-width: 700px) {
+  .col-sm-half {
+    flex-basis: 50%;
+  }
+}
+
+@media only screen and (min-width: 1100px) {
+  .col-sm-half {
+    flex-basis: calc(100%/3);
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .col-lg-fourth {
+    flex-basis: 25%;
+  }
+}

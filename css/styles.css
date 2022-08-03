@@ -1,0 +1,105 @@
+/* Header Styling */
+
+.nav-header {
+  padding: 1rem;
+  border-bottom: 1px solid rgb(224, 209, 173);
+}
+
+#header-name {
+  margin: 0;
+  font-size: 20px;
+}
+
+#header-icons {
+  text-align: right;
+}
+
+.header-icon-wrapper {
+  margin: 0 1rem;
+}
+
+.header-icon-wrapper > img {
+  width: 25px;
+  height: 25px;
+}
+
+/* Navigation Icon Styling */
+
+.nav-icon {
+  margin: 0.5rem;
+  transition: transform 0.5s ease;
+}
+
+.nav-icon:hover {
+  transform: scale(1.2);
+}
+
+.nav-icon-selected {
+  transform: scale(1.2);
+  box-shadow: -1px 1px 16px 10px rgba(26, 112, 185, 0.85);
+}
+
+#navigation-icons {
+  padding-top: 1rem;
+}
+
+.nav-icon-wrapper > img {
+  width: 52px;
+  height: 40px;
+}
+
+/* Entry Styling */
+#rendered-entries {
+  margin: 1rem;
+}
+
+.entry-wrapper {
+  margin: 0.2rem;
+}
+
+/* Image Styling */
+
+.col-img-wrapper > img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10%;
+}
+
+/* Text Styling */
+
+.text-center {
+  text-align: center;
+}
+
+.text-gold {
+  color: rgb(224, 209, 173);
+}
+
+.text-blue {
+  color: rgb(135, 164, 206);
+}
+
+/* Font Styling */
+
+.hylia-font {
+  font-family: "Hylia Serif", sans-serif;
+}
+
+@font-face {
+  font-family: "Hylia Serif";
+  src: url("/fonts/HyliaSerifBeta-Regular.otf");
+}
+
+/* Background Styling */
+
+.background-black {
+  background-color: black;
+}
+
+.background-grey {
+  background-color: rgb(20, 20, 22);
+}
+
+background-gold {
+  background-color: rgb(224, 209, 173);
+}
