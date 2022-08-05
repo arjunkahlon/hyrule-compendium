@@ -110,6 +110,8 @@ html {
 
 .detail-footer {
   padding: 0 2rem;
+  max-height: 400px;
+  overflow: scroll;
 }
 
 /* Image Styling */
@@ -170,6 +172,10 @@ html {
   display: none;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 /* Font Styling */
 
 .hylia-font {
@@ -220,6 +226,13 @@ background-gold {
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.85);
+}
+
+@media only screen and (min-width: 700px) {
+  .detail-footer {
+    overflow: auto;
+    max-height: none;
+  }
 }
 
 @media only screen and (min-width: 1400px) {

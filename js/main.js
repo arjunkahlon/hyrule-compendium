@@ -1,3 +1,4 @@
+// API Calls.
 getCreatures();
 getMonsters();
 getMaterials();
@@ -24,18 +25,16 @@ function addEventList(list, event, fnct) {
 }
 
 function clickEntry(event) {
-  // if (event.target.className !== 'entry-container') {
-  //   return;
-  // }
   event.stopPropagation();
   data.entryView = data.compendium[event.target.closest('.entry-container').getAttribute('dataid') - 1];
-  // console.log(event.target.closest('.entry-container'));
   openDetail();
 }
 
 function openDetail() {
   detailOverlay.classList.remove('hidden');
   $detailRow.appendChild(renderDetail(data.entryView));
+  renderDetailLocations(data.entryView);
+  renderDetailAttributes(data.entryView, ['drops', 'cooking_effect', 'attack', 'defense']);
   var $closeDetail = document.querySelector('.modal-close');
   $closeDetail.addEventListener('click', closeDetail);
 }
@@ -54,7 +53,6 @@ function clickOverlay(event) {
   }
   event.stopPropagation();
   closeDetail();
-  // detailOverlay.classList.add('hidden');
 }
 
 // Navigation Functionality
@@ -311,16 +309,11 @@ function renderDetail(obj) {
         createElement('div', { class: 'row wrap' }, [
           createElement('div', { class: 'col-detail' }, [
             createElement('div', { class: 'location-wrapper align-center' }, [
-              createElement('h2', { class: 'text-gold hylia-font' }, ['Common Locations']),
-              createElement('p', { class: 'text-gold segoe-font' }, ['Hyrule Field']),
-              createElement('p', { class: 'text-gold segoe-font' }, ['Faron Grasslands'])
+              createElement('h2', { class: 'text-gold hylia-font' }, ['Common Locations'])
             ])
           ]),
           createElement('div', { class: 'col-detail align-center' }, [
-            createElement('div', { class: 'recoverable-wrapper' }, [
-              createElement('h2', { class: 'text-gold hylia-font' }, ['Recoverable Items']),
-              createElement('p', { class: 'text-gold segoe-font' }, ['None'])
-            ])
+            createElement('div', { class: 'detail-attribute-wrapper' }, [])
           ])
         ]),
         createElement('div', { class: 'desktop-heart-wrapper align-right' }, [
@@ -329,6 +322,42 @@ function renderDetail(obj) {
       ])
     ]);
   return $entryDetail;
+}
+
+function renderDetailLocations(obj) {
+  var $locationWrapper = document.querySelector('.location-wrapper');
+  if (obj.common_locations !== null) {
+    for (let i = 0; i < obj.common_locations.length; i++) {
+      $locationWrapper.appendChild(createElement('p', { class: 'text-gold segoe-font' }, [obj.common_locations[i]]));
+    }
+  } else {
+    $locationWrapper.appendChild(createElement('p', { class: 'text-gold segoe-font' }, ['No Common Locations']));
+  }
+}
+
+function renderDetailAttributes(obj, attributes) {
+  var $attributeWrapper = document.querySelector('.detail-attribute-wrapper');
+
+  for (let i = 0; i < attributes.length; i++) {
+    if (attributes[i] in obj && obj[attributes[i]] !== 0) {
+      $attributeWrapper.appendChild(createElement('h2', { class: 'text-gold hylia-font' }, [titleAttribute(attributes[i])]));
+      if (obj[attributes[i]] !== null) {
+        if (obj[attributes[i]].length !== 0) {
+          if (Array.isArray(obj[attributes[i]])) {
+            for (let j = 0; j < obj[attributes[i]].length; j++) {
+              $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, [obj[attributes[i]][j]]));
+            }
+          } else {
+            $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, [obj[attributes[i]]]));
+          }
+        } else {
+          $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, ['None']));
+        }
+      } else {
+        $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, ['Rare Unknown']));
+      }
+    }
+  }
 }
 
 // General Dom Functionality
@@ -351,5 +380,22 @@ function createElement(tagName, attributes, children) {
 function removeAllChildren(parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
+  }
+}
+
+// Case Specific Functionality
+
+function titleAttribute(str) {
+  switch (str) {
+    case 'drops':
+      return 'Droppable Items';
+    case 'cooking_effect':
+      return 'Cooking Effect';
+    case 'attack':
+      return 'Attack Stat';
+    case 'defense':
+      return 'Defense Stat';
+    default:
+      return str;
   }
 }
