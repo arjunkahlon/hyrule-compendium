@@ -10,6 +10,7 @@ var data = {
   materials: [],
   equipment: [],
   treasure: [],
+  compendiumAlph: [],
   creaturesAlph: [],
   monstersAlph: [],
   materialsAlph: [],

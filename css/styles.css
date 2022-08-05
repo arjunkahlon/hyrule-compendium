@@ -1,8 +1,17 @@
+/* HTML */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Header Styling */
 
 .nav-header {
   padding: 1rem;
   border-bottom: 1px solid rgb(224, 209, 173);
+  height: 62px;
+  position: fixed;
+  width: 100%;
+  top: 0;
 }
 
 #header-name {
@@ -36,25 +45,73 @@
 
 .nav-icon-selected {
   transform: scale(1.2);
-  box-shadow: -1px 1px 16px 10px rgba(26, 112, 185, 0.85);
+  box-shadow: -1px 1px 16px 8px rgba(26, 112, 185, 0.85);
 }
 
 #navigation-icons {
   padding-top: 1rem;
+  height: 82px;
+  position: fixed;
+  width: 100%;
+  top: 3.9rem;
 }
 
 .nav-icon-wrapper > img {
-  width: 52px;
-  height: 40px;
+  width: 47px;
+  height: 36px;
 }
 
 /* Entry Styling */
+
+.compendium-entries {
+  margin-top: 145px;
+}
+
 #rendered-entries {
   margin: 1rem;
 }
 
 .entry-wrapper {
   margin: 0.2rem;
+}
+
+.entry-container {
+  transition: transform 0.5s ease;
+}
+
+.entry-container:hover {
+  background-color: rgba(1, 1, 1, 0.521);
+  box-shadow: inset 0 0 0 0.5px rgb(224, 209, 173);
+}
+
+/* Entry Detail Styling */
+.detail-modal {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  margin: auto;
+  padding-bottom: 3rem;
+}
+
+.detail-header {
+  padding: 0 2rem;
+  border-bottom: 1px solid rgb(224, 209, 173);
+}
+
+.detail-title {
+  line-height: 1em;
+}
+
+.detail-body {
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgb(224, 209, 173);
+  position: relative;
+}
+
+.detail-footer {
+  padding: 0 2rem;
+  max-height: 400px;
+  overflow: scroll;
 }
 
 /* Image Styling */
@@ -65,11 +122,30 @@
   border-radius: 10%;
 }
 
-/* Text Styling */
+.detail-image-wrapper > img {
+  width: 230px;
+  height: 230px;
+}
 
-.text-center {
+/* General Alignment Styling */
+
+.align-center {
   text-align: center;
 }
+
+.align-right {
+  text-align: right;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.remove-line-hight {
+  line-height: 0;
+}
+
+/* Text Styling */
 
 .text-gold {
   color: rgb(224, 209, 173);
@@ -79,10 +155,39 @@
   color: rgb(135, 164, 206);
 }
 
+.fa-xmark {
+  font-size: 26px;
+}
+
+.mobile-heart {
+  font-size: 2rem;
+  color: grey;
+  position: fixed;
+  right: 1rem;
+}
+
+.desktop-heart {
+  font-size: 2rem;
+  color: grey;
+  display: none;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
 /* Font Styling */
 
 .hylia-font {
   font-family: "Hylia Serif", sans-serif;
+}
+
+.aerial-font {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.segoe-font {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 @font-face {
@@ -100,6 +205,49 @@
   background-color: rgb(20, 20, 22);
 }
 
+.background-texture {
+  background-image: url("../images/texture.jpeg");
+}
+
+.background-dark {
+  background-color: rgb(26, 20, 20);
+}
+
 background-gold {
   background-color: rgb(224, 209, 173);
+}
+
+/* Overlay Styling */
+
+.detail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+@media only screen and (min-width: 700px) {
+  .detail-footer {
+    overflow: auto;
+    max-height: none;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .detail-modal {
+    width: 40%;
+    height: auto;
+    position: relative;
+    top: 8rem;
+  }
+
+  .mobile-heart {
+    display: none;
+  }
+
+  .desktop-heart {
+    display: inline;
+  }
 }

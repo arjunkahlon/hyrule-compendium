@@ -7,8 +7,20 @@
   flex-basis: 100%;
 }
 
+.col-half {
+  flex-basis: 50%;
+}
+
 .col-fluid {
   flex-basis: auto;
+}
+
+.col-modal {
+  flex-basis: 100%;
+}
+
+.col-detail {
+  flex-basis: 100%;
 }
 
 .col-img {
@@ -56,6 +68,10 @@
   display: block;
 }
 
+.hidden {
+  display: none;
+}
+
 .in-line {
   display: inline;
 }
@@ -81,5 +97,9 @@
 @media only screen and (min-width: 1400px) {
   .col-lg-fourth {
     flex-basis: 25%;
+  }
+
+  .col-detail {
+    flex-basis: 50%;
   }
 }

@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AJAX Project</title>
   <link rel="icon" href="images/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="background-black">
-  <header class="nav-header background-grey">
+<body class="background-dark">
+  <header class="nav-header background-texture">
     <div class="row space-between">
       <div class="col-fluid">
         <h2 id="header-name" class="text-gold hylia-font">COMPENDIUM</h2>
@@ -33,9 +36,9 @@
     </div>
   </header>
   <main>
-    <section id="navigation-icons">
+    <section id="navigation-icons" class="background-dark">
       <div class="row center">
-        <div class="column-full nav-icon-container">
+        <div class="col-full nav-icon-container align-center">
           <div class="nav-icon-wrapper in-line-block">
             <img src="./images/icons/Creatures.png"
               alt="Creatures" class="nav-icon nav-icon-selected" id="creatures">
@@ -59,11 +62,16 @@
         </div>
       </div>
     </section>
-    <section>
+    <section class="compendium-entries">
       <div id="rendered-entries" data-view="creatures" >
         <div class="row wrap" id="entry-row"></div>
       </div>
     </section>
+    <div id="detail-view" class="detail-overlay hidden">
+      <div class="detail-modal background-texture">
+        <div class="row" id="detail-row"></div>
+      </div>
+    </div>
   </main>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
