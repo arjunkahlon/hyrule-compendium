@@ -2,6 +2,8 @@
 var data = {
   pageView: 'creatures',
   currentNavIcon: null,
+  numSort: true,
+  ascendSort: true,
   entryView: null,
   favorites: [],
   compendium: [],

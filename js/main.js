@@ -14,8 +14,20 @@ var $detailRow = document.querySelector('#detail-row');
 var $navigationIcons = document.querySelectorAll('.nav-icon');
 addEventList($navigationIcons, 'click', navigationClick);
 
-var detailOverlay = document.querySelector('.detail-overlay');
-detailOverlay.addEventListener('click', clickOverlay);
+var $detailOverlay = document.querySelector('.detail-overlay');
+$detailOverlay.addEventListener('click', clickDetailOverlay);
+
+var $sortOverlay = document.querySelector('.sort-overlay');
+var $sortClose = document.querySelector('#sort-close');
+var $navSort = document.querySelector('#nav-sort');
+var $sortToggle = document.querySelector('#sort-toggle');
+var $sortToggleBox = document.querySelector('#sort-toggle-box');
+var $ascendArrow = document.querySelector('#ascend-arrow');
+var $descendArrow = document.querySelector('#descend-arrow');
+$navSort.addEventListener('click', clickSort);
+$sortToggleBox.addEventListener('click', clickSortToggle);
+$sortOverlay.addEventListener('click', clickSortOverlay);
+$sortClose.addEventListener('click', closeSort);
 
 // Event Functionality
 function addEventList(list, event, fnct) {
@@ -31,7 +43,7 @@ function clickEntry(event) {
 }
 
 function openDetail() {
-  detailOverlay.classList.remove('hidden');
+  $detailOverlay.classList.remove('hidden');
   $detailRow.appendChild(renderDetail(data.entryView));
   renderDetailLocations(data.entryView);
   renderDetailAttributes(data.entryView, ['drops', 'cooking_effect', 'attack', 'defense']);
@@ -41,18 +53,66 @@ function openDetail() {
 
 function closeDetail() {
   data.entryView = null;
-  detailOverlay.classList.add('hidden');
+  $detailOverlay.classList.add('hidden');
   if ($detailRow.childElementCount !== 0) {
     removeAllChildren($detailRow);
   }
 }
 
-function clickOverlay(event) {
+function clickDetailOverlay(event) {
   if (event.target.className !== 'detail-overlay') {
     return;
   }
   event.stopPropagation();
   closeDetail();
+}
+
+function clickSort(event) {
+  if (event.target.getAttribute('id') !== 'nav-sort') {
+    return;
+  }
+  openSort();
+}
+
+function clickSortToggle(event) {
+  event.stopPropagation();
+  toggleOrder();
+}
+
+function toggleOrder() {
+  if (data.ascendSort) {
+    $sortToggle.style.left = '2.8rem';
+    $descendArrow.classList.add('text-gold');
+    $descendArrow.classList.remove('text-grey');
+    $ascendArrow.classList.remove('text-gold');
+    $ascendArrow.classList.add('text-grey');
+    data.ascendSort = false;
+  } else {
+    $sortToggle.style.left = '0';
+    $ascendArrow.classList.add('text-gold');
+    $ascendArrow.classList.remove('text-grey');
+    $descendArrow.classList.remove('text-gold');
+    $descendArrow.classList.add('text-grey');
+    data.ascendSort = true;
+  }
+  renderControl();
+}
+
+function openSort() {
+  $sortOverlay.classList.remove('hidden');
+
+}
+
+function closeSort() {
+  $sortOverlay.classList.add('hidden');
+}
+
+function clickSortOverlay(event) {
+  if (event.target.className !== 'sort-overlay') {
+    return;
+  }
+  event.stopPropagation();
+  closeSort();
 }
 
 // Navigation Functionality
@@ -68,7 +128,7 @@ function navigationClick(event) {
 
 function renderCategory(category) {
   data.pageView = category;
-  renderEntries(data[data.pageView]);
+  renderControl();
 }
 
 // API Functionality
@@ -260,11 +320,36 @@ function renderEntry(obj) {
   return $compendiumEntry;
 }
 
+function renderControl() {
+  if (data.numSort) {
+    if (data.ascendSort) {
+      renderEntries(data[data.pageView]);
+    } else {
+      renderEntriesReverse(data[data.pageView]);
+    }
+  } else {
+    if (data.ascendSort) {
+      renderEntries(data[data.pageView + 'Alph']);
+    } else {
+      renderEntriesReverse(data[data.pageView + 'Alph']);
+    }
+  }
+}
+
 function renderEntries(entryArr) {
   if ($entryRow.childElementCount !== 0) {
     removeAllChildren($entryRow);
   }
   for (let i = 0; i < entryArr.length; i++) {
+    $entryRow.appendChild(renderEntry(entryArr[i]));
+  }
+}
+
+function renderEntriesReverse(entryArr) {
+  if ($entryRow.childElementCount !== 0) {
+    removeAllChildren($entryRow);
+  }
+  for (let i = entryArr.length - 1; i >= 0; i--) {
     $entryRow.appendChild(renderEntry(entryArr[i]));
   }
 }

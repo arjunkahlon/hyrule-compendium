@@ -23,6 +23,10 @@
   flex-basis: 100%;
 }
 
+.col-sort {
+  flex-basis: 100%;
+}
+
 .col-img {
   flex-basis: calc(100%/6);
 }
@@ -52,6 +56,10 @@
 .center {
   justify-content: center;
   align-items: center;
+}
+
+.end {
+  justify-content: end;
 }
 
 .space-between {
@@ -85,6 +93,10 @@
 @media only screen and (min-width: 700px) {
   .col-sm-half {
     flex-basis: 50%;
+  }
+
+  .col-sort {
+    flex-basis: 25%;
   }
 }
 
