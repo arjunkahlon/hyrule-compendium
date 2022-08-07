@@ -74,7 +74,7 @@ function clickSort(event) {
   if (event.target.getAttribute('id') !== 'nav-sort') {
     return;
   }
-  openSort();
+  toggleSortView();
 }
 
 function clickSortToggle(event) {
@@ -143,8 +143,12 @@ function highlightArrowDown() {
   $descendArrow.classList.add('text-grey');
 }
 
-function openSort() {
-  $sortOverlay.classList.remove('hidden');
+function toggleSortView() {
+  if ($sortOverlay.classList.contains('hidden')) {
+    $sortOverlay.classList.remove('hidden');
+  } else {
+    $sortOverlay.classList.add('hidden');
+  }
   $sortRow.addEventListener('click', clickSortRow);
 }
 
