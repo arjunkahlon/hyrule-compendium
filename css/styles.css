@@ -298,7 +298,7 @@ html {
 
 @font-face {
   font-family: "Hylia Serif";
-  src: url("/fonts/HyliaSerifBeta-Regular.otf");
+  src: url("../fonts/HyliaSerifBeta-Regular.otf");
 }
 
 /* Background Styling */
