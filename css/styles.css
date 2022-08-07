@@ -163,6 +163,7 @@ html {
   padding: 1rem 2rem;
   margin-top: 1rem;
   font-size: 1rem;
+  min-width: 7.6rem;
 }
 
 .sort-dropdown {

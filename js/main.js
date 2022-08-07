@@ -17,29 +17,38 @@ addEventList($navigationIcons, 'click', navigationClick);
 var $detailOverlay = document.querySelector('.detail-overlay');
 $detailOverlay.addEventListener('click', clickDetailOverlay);
 
-var $sortOverlay = document.querySelector('.sort-overlay');
-var $sortClose = document.querySelector('#sort-close');
 var $navSort = document.querySelector('#nav-sort');
 var $sortToggle = document.querySelector('#sort-toggle');
 var $sortToggleBox = document.querySelector('#sort-toggle-box');
+var $sortRow = document.querySelector('#sort-row');
 var $ascendArrow = document.querySelector('#ascend-arrow');
 var $descendArrow = document.querySelector('#descend-arrow');
+var $sortBtn = document.querySelector('.sort-btn');
+var $dropDownNum = document.querySelector('#dropdown-number');
+var $dropDownName = document.querySelector('#dropdown-name');
+var $sortOverlay = document.querySelector('.sort-overlay');
+var $sortClose = document.querySelector('#sort-close');
 $navSort.addEventListener('click', clickSort);
 $sortToggleBox.addEventListener('click', clickSortToggle);
+$dropDownNum.addEventListener('click', clickDropDownNum);
+$dropDownName.addEventListener('click', clickDropDownName);
 $sortOverlay.addEventListener('click', clickSortOverlay);
 $sortClose.addEventListener('click', closeSort);
 
-// Event Functionality
-function addEventList(list, event, fnct) {
-  for (let i = 0; i < list.length; i++) {
-    list[i].addEventListener(event, fnct);
-  }
-}
+// Entry Functionality
 
 function clickEntry(event) {
   event.stopPropagation();
   data.entryView = data.compendium[event.target.closest('.entry-container').getAttribute('dataid') - 1];
   openDetail();
+}
+
+function clickDetailOverlay(event) {
+  if (event.target.className !== 'detail-overlay') {
+    return;
+  }
+  event.stopPropagation();
+  closeDetail();
 }
 
 function openDetail() {
@@ -59,13 +68,7 @@ function closeDetail() {
   }
 }
 
-function clickDetailOverlay(event) {
-  if (event.target.className !== 'detail-overlay') {
-    return;
-  }
-  event.stopPropagation();
-  closeDetail();
-}
+// Sort Functionality
 
 function clickSort(event) {
   if (event.target.getAttribute('id') !== 'nav-sort') {
@@ -79,40 +82,74 @@ function clickSortToggle(event) {
   toggleOrder();
 }
 
-function toggleOrder() {
-  if (data.ascendSort) {
-    $sortToggle.style.left = '2.8rem';
-    $descendArrow.classList.add('text-gold');
-    $descendArrow.classList.remove('text-grey');
-    $ascendArrow.classList.remove('text-gold');
-    $ascendArrow.classList.add('text-grey');
-    data.ascendSort = false;
-  } else {
-    $sortToggle.style.left = '0';
-    $ascendArrow.classList.add('text-gold');
-    $ascendArrow.classList.remove('text-grey');
-    $descendArrow.classList.remove('text-gold');
-    $descendArrow.classList.add('text-grey');
-    data.ascendSort = true;
-  }
-  renderControl();
-}
-
-function openSort() {
-  $sortOverlay.classList.remove('hidden');
-
-}
-
-function closeSort() {
-  $sortOverlay.classList.add('hidden');
-}
-
 function clickSortOverlay(event) {
   if (event.target.className !== 'sort-overlay') {
     return;
   }
   event.stopPropagation();
   closeSort();
+}
+
+function clickSortRow(event) {
+  if (event.target.getAttribute('id') !== 'sort-row') {
+    return;
+  }
+  closeSort();
+}
+
+function clickDropDownNum(event) {
+  if (event.target.tagName !== 'SPAN') {
+    return;
+  }
+
+  data.numSort = true;
+  $sortBtn.innerText = 'Number';
+  renderControl();
+}
+
+function clickDropDownName(event) {
+  if (event.target.tagName !== 'SPAN') {
+    return;
+  }
+  data.numSort = false;
+  $sortBtn.innerText = 'Name';
+  renderControl();
+}
+
+function toggleOrder() {
+  if (data.ascendSort) {
+    $sortToggle.style.left = '2.8rem';
+    highlightArrowUp();
+    data.ascendSort = false;
+  } else {
+    $sortToggle.style.left = '0';
+    highlightArrowDown();
+    data.ascendSort = true;
+  }
+  renderControl();
+}
+
+function highlightArrowUp() {
+  $descendArrow.classList.add('text-gold');
+  $descendArrow.classList.remove('text-grey');
+  $ascendArrow.classList.remove('text-gold');
+  $ascendArrow.classList.add('text-grey');
+}
+
+function highlightArrowDown() {
+  $ascendArrow.classList.add('text-gold');
+  $ascendArrow.classList.remove('text-grey');
+  $descendArrow.classList.remove('text-gold');
+  $descendArrow.classList.add('text-grey');
+}
+
+function openSort() {
+  $sortOverlay.classList.remove('hidden');
+  $sortRow.addEventListener('click', clickSortRow);
+}
+
+function closeSort() {
+  $sortOverlay.classList.add('hidden');
 }
 
 // Navigation Functionality
@@ -296,7 +333,22 @@ function getTreasure() {
   treasureRequest.send();
 }
 
-// Dom Functionality
+// Dom Render Functionality
+
+function createElement(tagName, attributes, children) {
+  var $element = document.createElement(tagName);
+  for (var name in attributes) {
+    $element.setAttribute(name, attributes[name]);
+  }
+  for (var i = 0; i < children.length; i++) {
+    if (children[i] instanceof HTMLElement) {
+      $element.appendChild(children[i]);
+    } else {
+      $element.appendChild(document.createTextNode(children[i]));
+    }
+  }
+  return $element;
+}
 
 function renderEntry(obj) {
   var $compendiumEntry =
@@ -447,24 +499,15 @@ function renderDetailAttributes(obj, attributes) {
 
 // General Dom Functionality
 
-function createElement(tagName, attributes, children) {
-  var $element = document.createElement(tagName);
-  for (var name in attributes) {
-    $element.setAttribute(name, attributes[name]);
-  }
-  for (var i = 0; i < children.length; i++) {
-    if (children[i] instanceof HTMLElement) {
-      $element.appendChild(children[i]);
-    } else {
-      $element.appendChild(document.createTextNode(children[i]));
-    }
-  }
-  return $element;
-}
-
 function removeAllChildren(parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
+  }
+}
+
+function addEventList(list, event, fnct) {
+  for (let i = 0; i < list.length; i++) {
+    list[i].addEventListener(event, fnct);
   }
 }
 
