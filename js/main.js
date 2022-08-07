@@ -14,15 +14,26 @@ var $detailRow = document.querySelector('#detail-row');
 var $navigationIcons = document.querySelectorAll('.nav-icon');
 addEventList($navigationIcons, 'click', navigationClick);
 
-var detailOverlay = document.querySelector('.detail-overlay');
-detailOverlay.addEventListener('click', clickOverlay);
+var $detailOverlay = document.querySelector('.detail-overlay');
+$detailOverlay.addEventListener('click', clickDetailOverlay);
 
-// Event Functionality
-function addEventList(list, event, fnct) {
-  for (let i = 0; i < list.length; i++) {
-    list[i].addEventListener(event, fnct);
-  }
-}
+var $navSort = document.querySelector('#nav-sort');
+var $sortToggle = document.querySelector('#sort-toggle');
+var $sortToggleBox = document.querySelector('#sort-toggle-box');
+var $sortRow = document.querySelector('#sort-row');
+var $ascendArrow = document.querySelector('#ascend-arrow');
+var $descendArrow = document.querySelector('#descend-arrow');
+var $sortBtn = document.querySelector('.sort-btn');
+var $dropDownSortChoice = document.querySelector('#dropdown-sort-choice');
+var $sortOverlay = document.querySelector('.sort-overlay');
+var $sortClose = document.querySelector('#sort-close');
+$navSort.addEventListener('click', clickSort);
+$sortToggleBox.addEventListener('click', clickSortToggle);
+$dropDownSortChoice.addEventListener('click', clickDownDownSort);
+$sortOverlay.addEventListener('click', clickSortOverlay);
+$sortClose.addEventListener('click', toggleSortView);
+
+// Entry Functionality
 
 function clickEntry(event) {
   event.stopPropagation();
@@ -30,8 +41,16 @@ function clickEntry(event) {
   openDetail();
 }
 
+function clickDetailOverlay(event) {
+  if (event.target.className !== 'detail-overlay') {
+    return;
+  }
+  event.stopPropagation();
+  closeDetail();
+}
+
 function openDetail() {
-  detailOverlay.classList.remove('hidden');
+  $detailOverlay.classList.remove('hidden');
   $detailRow.appendChild(renderDetail(data.entryView));
   renderDetailLocations(data.entryView);
   renderDetailAttributes(data.entryView, ['drops', 'cooking_effect', 'attack', 'defense']);
@@ -41,18 +60,91 @@ function openDetail() {
 
 function closeDetail() {
   data.entryView = null;
-  detailOverlay.classList.add('hidden');
+  $detailOverlay.classList.add('hidden');
   if ($detailRow.childElementCount !== 0) {
     removeAllChildren($detailRow);
   }
 }
 
-function clickOverlay(event) {
-  if (event.target.className !== 'detail-overlay') {
+// Sort Functionality
+
+function clickSort(event) {
+  if (event.target.getAttribute('id') !== 'nav-sort') {
+    return;
+  }
+  toggleSortView();
+}
+
+function clickSortToggle(event) {
+  event.stopPropagation();
+  toggleOrder();
+}
+
+function clickSortOverlay(event) {
+  if (event.target.className !== 'sort-overlay') {
     return;
   }
   event.stopPropagation();
-  closeDetail();
+  toggleSortView();
+}
+
+function clickSortRow(event) {
+  if (event.target.getAttribute('id') !== 'sort-row') {
+    return;
+  }
+  toggleSortView();
+}
+
+function clickDownDownSort(event) {
+  if (event.target.tagName !== 'SPAN') {
+    return;
+  }
+  if ($dropDownSortChoice.textContent === 'Name') {
+    data.numSort = false;
+    $sortBtn.innerText = 'Name';
+    $dropDownSortChoice.textContent = 'Number';
+  } else {
+    data.numSort = true;
+    $sortBtn.innerText = 'Number';
+    $dropDownSortChoice.textContent = 'Name';
+  }
+  renderControl();
+}
+
+function toggleOrder() {
+  if (data.ascendSort) {
+    $sortToggle.style.left = '2.8rem';
+    highlightArrowUp();
+    data.ascendSort = false;
+  } else {
+    $sortToggle.style.left = '0';
+    highlightArrowDown();
+    data.ascendSort = true;
+  }
+  renderControl();
+}
+
+function highlightArrowUp() {
+  $descendArrow.classList.add('text-gold');
+  $descendArrow.classList.remove('text-grey');
+  $ascendArrow.classList.remove('text-gold');
+  $ascendArrow.classList.add('text-grey');
+}
+
+function highlightArrowDown() {
+  $ascendArrow.classList.add('text-gold');
+  $ascendArrow.classList.remove('text-grey');
+  $descendArrow.classList.remove('text-gold');
+  $descendArrow.classList.add('text-grey');
+}
+
+function toggleSortView() {
+  if ($sortOverlay.classList.contains('hidden')) {
+    $sortOverlay.classList.remove('hidden');
+  } else {
+    $sortOverlay.classList.add('hidden');
+  }
+  $sortRow.addEventListener('click', clickSortRow);
 }
 
 // Navigation Functionality
@@ -68,7 +160,7 @@ function navigationClick(event) {
 
 function renderCategory(category) {
   data.pageView = category;
-  renderEntries(data[data.pageView]);
+  renderControl();
 }
 
 // API Functionality
@@ -236,7 +328,22 @@ function getTreasure() {
   treasureRequest.send();
 }
 
-// Dom Functionality
+// Dom Render Functionality
+
+function createElement(tagName, attributes, children) {
+  var $element = document.createElement(tagName);
+  for (var name in attributes) {
+    $element.setAttribute(name, attributes[name]);
+  }
+  for (var i = 0; i < children.length; i++) {
+    if (children[i] instanceof HTMLElement) {
+      $element.appendChild(children[i]);
+    } else {
+      $element.appendChild(document.createTextNode(children[i]));
+    }
+  }
+  return $element;
+}
 
 function renderEntry(obj) {
   var $compendiumEntry =
@@ -260,11 +367,36 @@ function renderEntry(obj) {
   return $compendiumEntry;
 }
 
+function renderControl() {
+  if (data.numSort) {
+    if (data.ascendSort) {
+      renderEntries(data[data.pageView]);
+    } else {
+      renderEntriesReverse(data[data.pageView]);
+    }
+  } else {
+    if (data.ascendSort) {
+      renderEntries(data[data.pageView + 'Alph']);
+    } else {
+      renderEntriesReverse(data[data.pageView + 'Alph']);
+    }
+  }
+}
+
 function renderEntries(entryArr) {
   if ($entryRow.childElementCount !== 0) {
     removeAllChildren($entryRow);
   }
   for (let i = 0; i < entryArr.length; i++) {
+    $entryRow.appendChild(renderEntry(entryArr[i]));
+  }
+}
+
+function renderEntriesReverse(entryArr) {
+  if ($entryRow.childElementCount !== 0) {
+    removeAllChildren($entryRow);
+  }
+  for (let i = entryArr.length - 1; i >= 0; i--) {
     $entryRow.appendChild(renderEntry(entryArr[i]));
   }
 }
@@ -362,24 +494,15 @@ function renderDetailAttributes(obj, attributes) {
 
 // General Dom Functionality
 
-function createElement(tagName, attributes, children) {
-  var $element = document.createElement(tagName);
-  for (var name in attributes) {
-    $element.setAttribute(name, attributes[name]);
-  }
-  for (var i = 0; i < children.length; i++) {
-    if (children[i] instanceof HTMLElement) {
-      $element.appendChild(children[i]);
-    } else {
-      $element.appendChild(document.createTextNode(children[i]));
-    }
-  }
-  return $element;
-}
-
 function removeAllChildren(parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
+  }
+}
+
+function addEventList(list, event, fnct) {
+  for (let i = 0; i < list.length; i++) {
+    list[i].addEventListener(event, fnct);
   }
 }
 

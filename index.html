@@ -24,12 +24,10 @@
             <img id="nav-search" src="./images/icons/search.png" alt="Search">
           </div>
           <div class="header-icon-wrapper in-line">
-            <img id="nav-sort" src="./images/icons/sort.png" class="text-gold"
-              alt="Sort">
+            <i id="nav-sort" class="fa-solid fa-sort"></i>
           </div>
           <div class="header-icon-wrapper in-line">
-            <img id="nav-favorites" src="./images/icons/heart.png"
-              alt="Favorites">
+            <i id="nav-heart" class="fas fa-heart"></i>
           </div>
         </div>
       </div>
@@ -70,6 +68,55 @@
     <div id="detail-view" class="detail-overlay hidden">
       <div class="detail-modal background-texture">
         <div class="row" id="detail-row"></div>
+      </div>
+    </div>
+    <div id="sort-view" class="sort-overlay hidden">
+      <div class="row end" id="sort-row">
+        <div id="sort-container" class="col-sort background-texture">
+          <div id="sort-header" class="row space-between">
+            <div class="col-fluid">
+              <div>
+                <h2 id="sort-title" class="hylia-font remove-line-height text-gold">Sort Entries</h2>
+              </div>
+            </div>
+            <div class="col-fluid">
+              <i id="sort-close" class="fa-solid fa-xmark text-gold sort-close"></i>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-half">
+              <div class="sort-dropdown">
+                <button class="sort-btn">Number</button>
+                <div class="dropdown-content">
+                  <span id="dropdown-sort-choice" class="align-center">Name</span>
+                  <!-- <span id="dropdown-name" class="align-center">Name</span> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-half">
+              <div id="sort-toggle-container">
+                <div class="row center toggle-arrows">
+                  <div class="col-half">
+                    <i id="ascend-arrow" class="text-gold fa-solid fa-arrow-up"></i>
+                  </div>
+                  <div class="col-half">
+                    <i id="descend-arrow" class="text-grey fa-solid fa-arrow-down"></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-full">
+                    <div class="toggle-wrapper">
+                      <div id="sort-toggle-box" class="toggle-box">
+                        <div id="sort-toggle" class="toggle">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </main>
