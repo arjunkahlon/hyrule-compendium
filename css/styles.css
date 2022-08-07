@@ -188,7 +188,7 @@ html {
 }
 
 .dropdown-content span:hover {
-  background: url("../images/texture.jpeg");
+  background: rgb(48, 39, 38);
 }
 
 .sort-dropdown:hover .dropdown-content {
@@ -207,7 +207,7 @@ html {
 
 .toggle-box {
   border-radius: 15%;
-  background-color: rgb(26, 20, 20);
+  background-color: rgb(48, 39, 38);
   border: 1px solid rgb(224, 209, 173);
   width: 5rem;
   height: 2.5rem;

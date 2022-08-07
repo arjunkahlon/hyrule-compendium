@@ -24,16 +24,14 @@ var $sortRow = document.querySelector('#sort-row');
 var $ascendArrow = document.querySelector('#ascend-arrow');
 var $descendArrow = document.querySelector('#descend-arrow');
 var $sortBtn = document.querySelector('.sort-btn');
-var $dropDownNum = document.querySelector('#dropdown-number');
-var $dropDownName = document.querySelector('#dropdown-name');
+var $dropDownSortChoice = document.querySelector('#dropdown-sort-choice');
 var $sortOverlay = document.querySelector('.sort-overlay');
 var $sortClose = document.querySelector('#sort-close');
 $navSort.addEventListener('click', clickSort);
 $sortToggleBox.addEventListener('click', clickSortToggle);
-$dropDownNum.addEventListener('click', clickDropDownNum);
-$dropDownName.addEventListener('click', clickDropDownName);
+$dropDownSortChoice.addEventListener('click', clickDownDownSort);
 $sortOverlay.addEventListener('click', clickSortOverlay);
-$sortClose.addEventListener('click', closeSort);
+$sortClose.addEventListener('click', toggleSortView);
 
 // Entry Functionality
 
@@ -87,32 +85,29 @@ function clickSortOverlay(event) {
     return;
   }
   event.stopPropagation();
-  closeSort();
+  toggleSortView();
 }
 
 function clickSortRow(event) {
   if (event.target.getAttribute('id') !== 'sort-row') {
     return;
   }
-  closeSort();
+  toggleSortView();
 }
 
-function clickDropDownNum(event) {
+function clickDownDownSort(event) {
   if (event.target.tagName !== 'SPAN') {
     return;
   }
-
-  data.numSort = true;
-  $sortBtn.innerText = 'Number';
-  renderControl();
-}
-
-function clickDropDownName(event) {
-  if (event.target.tagName !== 'SPAN') {
-    return;
+  if ($dropDownSortChoice.textContent === 'Name') {
+    data.numSort = false;
+    $sortBtn.innerText = 'Name';
+    $dropDownSortChoice.textContent = 'Number';
+  } else {
+    data.numSort = true;
+    $sortBtn.innerText = 'Number';
+    $dropDownSortChoice.textContent = 'Name';
   }
-  data.numSort = false;
-  $sortBtn.innerText = 'Name';
   renderControl();
 }
 
@@ -150,10 +145,6 @@ function toggleSortView() {
     $sortOverlay.classList.add('hidden');
   }
   $sortRow.addEventListener('click', clickSortRow);
-}
-
-function closeSort() {
-  $sortOverlay.classList.add('hidden');
 }
 
 // Navigation Functionality
