@@ -5,18 +5,25 @@ getMaterials();
 getEquipment();
 getTreasure();
 
-// Global Dom Selectors
+// Document Selectors
+var $appBody = document.body;
+
+// Entry Selectors
 var $entryRow = document.querySelector('#entry-row');
 $entryRow.addEventListener('click', clickEntry);
 
-var $detailRow = document.querySelector('#detail-row');
-
+// Navigation Selectors
+var $appHeader = document.querySelector('#app-header');
 var $navigationIcons = document.querySelectorAll('.nav-icon');
+$appHeader.addEventListener('click', initializeCompendium);
 addEventList($navigationIcons, 'click', navigationClick);
 
+// Entry Details Selectors
+var $detailRow = document.querySelector('#detail-row');
 var $detailOverlay = document.querySelector('.detail-overlay');
 $detailOverlay.addEventListener('click', clickDetailOverlay);
 
+// Sort Selectors
 var $navSort = document.querySelector('#nav-sort');
 var $sortToggle = document.querySelector('#sort-toggle');
 var $sortToggleBox = document.querySelector('#sort-toggle-box');
@@ -33,12 +40,32 @@ $dropDownSortChoice.addEventListener('click', clickDownDownSort);
 $sortOverlay.addEventListener('click', clickSortOverlay);
 $sortClose.addEventListener('click', toggleSortView);
 
-// Entry Functionality
+// Search Selectors
+var $navSearch = document.querySelector('#nav-search');
+var $searchView = document.querySelector('#search-view');
+$navSearch.addEventListener('click', toggleSearchView);
 
+// Navigation Functionality
+function navigationClick(event) {
+  if (event.target.className !== 'nav-icon') {
+    return;
+  }
+  data.currentNavIcon.classList.remove('nav-icon-selected');
+  data.currentNavIcon = event.target;
+  data.currentNavIcon.classList.add('nav-icon-selected');
+  renderCategory(event.target.id);
+}
+
+function renderCategory(category) {
+  data.pageView = category;
+  renderControl();
+}
+
+// Entry Detail Functionality
 function clickEntry(event) {
   event.stopPropagation();
   data.entryView = data.compendium[event.target.closest('.entry-container').getAttribute('dataid') - 1];
-  openDetail();
+  toggleDetailView();
 }
 
 function clickDetailOverlay(event) {
@@ -46,28 +73,29 @@ function clickDetailOverlay(event) {
     return;
   }
   event.stopPropagation();
-  closeDetail();
+  toggleDetailView();
 }
 
-function openDetail() {
-  $detailOverlay.classList.remove('hidden');
-  $detailRow.appendChild(renderDetail(data.entryView));
-  renderDetailLocations(data.entryView);
-  renderDetailAttributes(data.entryView, ['drops', 'cooking_effect', 'attack', 'defense']);
-  var $closeDetail = document.querySelector('.modal-close');
-  $closeDetail.addEventListener('click', closeDetail);
-}
-
-function closeDetail() {
-  data.entryView = null;
-  $detailOverlay.classList.add('hidden');
-  if ($detailRow.childElementCount !== 0) {
-    removeAllChildren($detailRow);
+function toggleDetailView() {
+  if ($detailOverlay.classList.contains('hidden')) {
+    $detailOverlay.classList.remove('hidden');
+    $appBody.classList.add('stop-background-scroll');
+    $detailRow.appendChild(renderDetail(data.entryView));
+    renderDetailLocations(data.entryView);
+    renderDetailAttributes(data.entryView, ['drops', 'cooking_effect', 'attack', 'defense']);
+    var $closeDetail = document.querySelector('.modal-close');
+    $closeDetail.addEventListener('click', toggleDetailView);
+  } else {
+    data.entryView = null;
+    $detailOverlay.classList.add('hidden');
+    $appBody.classList.remove('stop-background-scroll');
+    if ($detailRow.childElementCount !== 0) {
+      removeAllChildren($detailRow);
+    }
   }
 }
 
 // Sort Functionality
-
 function clickSort(event) {
   if (event.target.getAttribute('id') !== 'nav-sort') {
     return;
@@ -114,222 +142,52 @@ function clickDownDownSort(event) {
 function toggleOrder() {
   if (data.ascendSort) {
     $sortToggle.style.left = '2.8rem';
-    highlightArrowUp();
+    highlightArrowDown();
     data.ascendSort = false;
   } else {
     $sortToggle.style.left = '0';
-    highlightArrowDown();
+    highlightArrowUp();
     data.ascendSort = true;
   }
   renderControl();
 }
 
 function highlightArrowUp() {
-  $descendArrow.classList.add('text-gold');
-  $descendArrow.classList.remove('text-grey');
-  $ascendArrow.classList.remove('text-gold');
-  $ascendArrow.classList.add('text-grey');
+  $descendArrow.classList.replace('text-gold', 'text-grey');
+  $ascendArrow.classList.replace('text-grey', 'text-gold');
 }
 
 function highlightArrowDown() {
-  $ascendArrow.classList.add('text-gold');
-  $ascendArrow.classList.remove('text-grey');
-  $descendArrow.classList.remove('text-gold');
-  $descendArrow.classList.add('text-grey');
+  $descendArrow.classList.replace('text-grey', 'text-gold');
+  $ascendArrow.classList.replace('text-gold', 'text-grey');
 }
 
 function toggleSortView() {
   if ($sortOverlay.classList.contains('hidden')) {
     $sortOverlay.classList.remove('hidden');
+    $navSort.classList.replace('text-light-grey', 'text-gold');
+    $appBody.classList.add('stop-background-scroll');
   } else {
     $sortOverlay.classList.add('hidden');
+    $navSort.classList.replace('text-gold', 'text-light-grey');
+    $appBody.classList.remove('stop-background-scroll');
+
   }
   $sortRow.addEventListener('click', clickSortRow);
 }
 
-// Navigation Functionality
-function navigationClick(event) {
-  if (event.target.className !== 'nav-icon') {
-    return;
+// Search Functionality
+
+function toggleSearchView() {
+  if ($searchView.classList.contains('hidden')) {
+    $searchView.classList.remove('hidden');
+  } else {
+    $searchView.classList.add('hidden');
   }
-  data.currentNavIcon.classList.remove('nav-icon-selected');
-  data.currentNavIcon = event.target;
-  data.currentNavIcon.classList.add('nav-icon-selected');
-  renderCategory(event.target.id);
-}
 
-function renderCategory(category) {
-  data.pageView = category;
-  renderControl();
-}
-
-// API Functionality
-
-function getCreatures() {
-  var creatureRequest = new XMLHttpRequest();
-  creatureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/creatures');
-  creatureRequest.responseType = 'json';
-  creatureRequest.addEventListener('load', function () {
-    for (let i = 0; i < creatureRequest.response.data.food.length; i++) {
-      data.creatures.push(creatureRequest.response.data.food[i]);
-      data.creaturesAlph.push(creatureRequest.response.data.food[i]);
-      data.compendium.push(creatureRequest.response.data.food[i]);
-      data.compendiumAlph.push(creatureRequest.response.data.food[i]);
-    }
-    for (let i = 0; i < creatureRequest.response.data.non_food.length; i++) {
-      data.creatures.push(creatureRequest.response.data.non_food[i]);
-      data.creaturesAlph.push(creatureRequest.response.data.non_food[i]);
-      data.compendium.push(creatureRequest.response.data.non_food[i]);
-      data.compendiumAlph.push(creatureRequest.response.data.non_food[i]);
-    }
-    // Sort creatures array by id
-    data.creatures.sort(function (a, b) {
-      return a.id - b.id;
-    });
-
-    // Sort creatures and compendium arrays by name
-    data.creaturesAlph.sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-
-    data.compendium.sort(function (a, b) {
-      return a.id - b.id;
-    });
-
-    data.compendiumAlph.sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-
-    // Render creatures entries on page load by defualt
-    data.currentNavIcon = $navigationIcons[0];
-    renderEntries(data.creatures);
-  });
-  creatureRequest.send();
-}
-
-function getMonsters() {
-  var monsterRequest = new XMLHttpRequest();
-  monsterRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/monsters');
-  monsterRequest.responseType = 'json';
-  monsterRequest.addEventListener('load', function () {
-    for (let i = 0; i < monsterRequest.response.data.length; i++) {
-      data.monsters.push(monsterRequest.response.data[i]);
-      data.monstersAlph.push(monsterRequest.response.data[i]);
-      data.compendium.push(monsterRequest.response.data[i]);
-      data.compendiumAlph.push(monsterRequest.response.data[i]);
-    }
-    data.monsters.sort(function (a, b) {
-      return a.id - b.id;
-    });
-
-    data.monstersAlph.sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-
-    data.compendium.sort(function (a, b) {
-      return a.id - b.id;
-    });
-
-    data.compendiumAlph.sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-  });
-  monsterRequest.send();
-}
-
-function getMaterials() {
-  var materialRequest = new XMLHttpRequest();
-  materialRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/materials');
-  materialRequest.responseType = 'json';
-  materialRequest.addEventListener('load', function () {
-    for (let i = 0; i < materialRequest.response.data.length; i++) {
-      data.materials.push(materialRequest.response.data[i]);
-      data.materialsAlph.push(materialRequest.response.data[i]);
-      data.compendium.push(materialRequest.response.data[i]);
-      data.compendiumAlph.push(materialRequest.response.data[i]);
-    }
-    data.materials.sort(function (a, b) {
-      return a.id - b.id;
-    });
-
-    data.materialsAlph.sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-
-    data.compendium.sort(function (a, b) {
-      return a.id - b.id;
-    });
-
-    data.compendiumAlph.sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-  });
-  materialRequest.send();
-}
-
-function getEquipment() {
-  var equipmentRequest = new XMLHttpRequest();
-  equipmentRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/equipment');
-  equipmentRequest.responseType = 'json';
-  equipmentRequest.addEventListener('load', function () {
-    for (let i = 0; i < equipmentRequest.response.data.length; i++) {
-      data.equipment.push(equipmentRequest.response.data[i]);
-      data.equipmentAlph.push(equipmentRequest.response.data[i]);
-      data.compendium.push(equipmentRequest.response.data[i]);
-      data.compendiumAlph.push(equipmentRequest.response.data[i]);
-    }
-    data.equipment.sort(function (a, b) {
-      return a.id - b.id;
-    });
-
-    data.equipmentAlph.sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-
-    data.compendium.sort(function (a, b) {
-      return a.id - b.id;
-    });
-
-    data.compendiumAlph.sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-  });
-  equipmentRequest.send();
-}
-
-function getTreasure() {
-  var treasureRequest = new XMLHttpRequest();
-  treasureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/treasure');
-  treasureRequest.responseType = 'json';
-  treasureRequest.addEventListener('load', function () {
-    for (let i = 0; i < treasureRequest.response.data.length; i++) {
-      data.treasure.push(treasureRequest.response.data[i]);
-      data.treasureAlph.push(treasureRequest.response.data[i]);
-      data.compendium.push(treasureRequest.response.data[i]);
-      data.compendiumAlph.push(treasureRequest.response.data[i]);
-    }
-    data.treasure.sort(function (a, b) {
-      return a.id - b.id;
-    });
-
-    data.treasureAlph.sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-
-    data.compendium.sort(function (a, b) {
-      return a.id - b.id;
-    });
-
-    data.compendiumAlph.sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-  });
-
-  treasureRequest.send();
 }
 
 // Dom Render Functionality
-
 function createElement(tagName, attributes, children) {
   var $element = document.createElement(tagName);
   for (var name in attributes) {
@@ -493,7 +351,6 @@ function renderDetailAttributes(obj, attributes) {
 }
 
 // General Dom Functionality
-
 function removeAllChildren(parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
@@ -506,8 +363,192 @@ function addEventList(list, event, fnct) {
   }
 }
 
-// Case Specific Functionality
+// API Functionality
+function getCreatures() {
+  var creatureRequest = new XMLHttpRequest();
+  creatureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/creatures');
+  creatureRequest.responseType = 'json';
+  creatureRequest.addEventListener('load', function () {
+    for (let i = 0; i < creatureRequest.response.data.food.length; i++) {
+      data.creatures.push(creatureRequest.response.data.food[i]);
+      data.creaturesAlph.push(creatureRequest.response.data.food[i]);
+      data.compendium.push(creatureRequest.response.data.food[i]);
+      data.compendiumAlph.push(creatureRequest.response.data.food[i]);
+    }
+    for (let i = 0; i < creatureRequest.response.data.non_food.length; i++) {
+      data.creatures.push(creatureRequest.response.data.non_food[i]);
+      data.creaturesAlph.push(creatureRequest.response.data.non_food[i]);
+      data.compendium.push(creatureRequest.response.data.non_food[i]);
+      data.compendiumAlph.push(creatureRequest.response.data.non_food[i]);
+    }
+    // Sort creatures array by id
+    data.creatures.sort(function (a, b) {
+      return a.id - b.id;
+    });
 
+    // Sort creatures and compendium arrays by name
+    data.creaturesAlph.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+
+    data.compendium.sort(function (a, b) {
+      return a.id - b.id;
+    });
+
+    data.compendiumAlph.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+
+    // Render creatures entries on page load by defualt
+    initializeCompendium();
+  });
+  creatureRequest.send();
+}
+
+function initializeCompendium() {
+  if (data.currentNavIcon !== null) {
+    data.currentNavIcon.classList.remove('nav-icon-selected');
+  }
+  data.currentNavIcon = $navigationIcons[0];
+  data.currentNavIcon.classList.add('nav-icon-selected');
+
+  data.pageView = 'creatures';
+  if (!data.ascendSort) {
+    data.ascendSort = true;
+    $sortToggle.style.left = '0';
+    highlightArrowUp();
+  }
+  if (!data.numSort) {
+    data.numSort = true;
+    $sortBtn.innerText = 'Number';
+    $dropDownSortChoice.textContent = 'Name';
+  }
+  data.entryView = null;
+  renderControl();
+}
+
+function getMonsters() {
+  var monsterRequest = new XMLHttpRequest();
+  monsterRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/monsters');
+  monsterRequest.responseType = 'json';
+  monsterRequest.addEventListener('load', function () {
+    for (let i = 0; i < monsterRequest.response.data.length; i++) {
+      data.monsters.push(monsterRequest.response.data[i]);
+      data.monstersAlph.push(monsterRequest.response.data[i]);
+      data.compendium.push(monsterRequest.response.data[i]);
+      data.compendiumAlph.push(monsterRequest.response.data[i]);
+    }
+    data.monsters.sort(function (a, b) {
+      return a.id - b.id;
+    });
+
+    data.monstersAlph.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+
+    data.compendium.sort(function (a, b) {
+      return a.id - b.id;
+    });
+
+    data.compendiumAlph.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+  });
+  monsterRequest.send();
+}
+
+function getMaterials() {
+  var materialRequest = new XMLHttpRequest();
+  materialRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/materials');
+  materialRequest.responseType = 'json';
+  materialRequest.addEventListener('load', function () {
+    for (let i = 0; i < materialRequest.response.data.length; i++) {
+      data.materials.push(materialRequest.response.data[i]);
+      data.materialsAlph.push(materialRequest.response.data[i]);
+      data.compendium.push(materialRequest.response.data[i]);
+      data.compendiumAlph.push(materialRequest.response.data[i]);
+    }
+    data.materials.sort(function (a, b) {
+      return a.id - b.id;
+    });
+
+    data.materialsAlph.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+
+    data.compendium.sort(function (a, b) {
+      return a.id - b.id;
+    });
+
+    data.compendiumAlph.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+  });
+  materialRequest.send();
+}
+
+function getEquipment() {
+  var equipmentRequest = new XMLHttpRequest();
+  equipmentRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/equipment');
+  equipmentRequest.responseType = 'json';
+  equipmentRequest.addEventListener('load', function () {
+    for (let i = 0; i < equipmentRequest.response.data.length; i++) {
+      data.equipment.push(equipmentRequest.response.data[i]);
+      data.equipmentAlph.push(equipmentRequest.response.data[i]);
+      data.compendium.push(equipmentRequest.response.data[i]);
+      data.compendiumAlph.push(equipmentRequest.response.data[i]);
+    }
+    data.equipment.sort(function (a, b) {
+      return a.id - b.id;
+    });
+
+    data.equipmentAlph.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+
+    data.compendium.sort(function (a, b) {
+      return a.id - b.id;
+    });
+
+    data.compendiumAlph.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+  });
+  equipmentRequest.send();
+}
+
+function getTreasure() {
+  var treasureRequest = new XMLHttpRequest();
+  treasureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/treasure');
+  treasureRequest.responseType = 'json';
+  treasureRequest.addEventListener('load', function () {
+    for (let i = 0; i < treasureRequest.response.data.length; i++) {
+      data.treasure.push(treasureRequest.response.data[i]);
+      data.treasureAlph.push(treasureRequest.response.data[i]);
+      data.compendium.push(treasureRequest.response.data[i]);
+      data.compendiumAlph.push(treasureRequest.response.data[i]);
+    }
+    data.treasure.sort(function (a, b) {
+      return a.id - b.id;
+    });
+
+    data.treasureAlph.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+
+    data.compendium.sort(function (a, b) {
+      return a.id - b.id;
+    });
+
+    data.compendiumAlph.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+  });
+
+  treasureRequest.send();
+}
+
+// Case Specific Functionality
 function titleAttribute(str) {
   switch (str) {
     case 'drops':
@@ -515,9 +556,9 @@ function titleAttribute(str) {
     case 'cooking_effect':
       return 'Cooking Effect';
     case 'attack':
-      return 'Attack Stat';
+      return 'Attack Power';
     case 'defense':
-      return 'Defense Stat';
+      return 'Defense Power';
     default:
       return str;
   }
