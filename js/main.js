@@ -209,7 +209,7 @@ function toggleSearch() {
 }
 
 function processSearchInput(event) {
-  data.searchStr = $searchEntriesInput.value;
+  data.searchStr = $searchEntriesInput.value.toLowerCase();
   searchEntries();
 }
 
