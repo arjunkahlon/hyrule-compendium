@@ -16,7 +16,7 @@
   <header class="nav-header background-texture">
     <div class="row space-between">
       <div class="col-fluid">
-        <h2 id="header-name" class="text-gold hylia-font">COMPENDIUM</h2>
+        <h2 id="app-header" class="text-gold hylia-font">COMPENDIUM</h2>
       </div>
       <div class="col-fluid">
         <div id="header-icons">
@@ -24,7 +24,7 @@
             <img id="nav-search" src="./images/icons/search.png" alt="Search">
           </div>
           <div class="header-icon-wrapper in-line">
-            <i id="nav-sort" class="fa-solid fa-sort"></i>
+            <i id="nav-sort" class="fa-solid fa-sort text-light-grey"></i>
           </div>
           <div class="header-icon-wrapper in-line">
             <i id="nav-heart" class="fas fa-heart"></i>
@@ -60,7 +60,7 @@
         </div>
       </div>
     </section>
-    <section class="compendium-entries">
+    <section id="compendium-entries">
       <div id="rendered-entries" data-view="creatures" >
         <div class="row wrap" id="entry-row"></div>
       </div>
@@ -80,7 +80,7 @@
               </div>
             </div>
             <div class="col-fluid">
-              <i id="sort-close" class="fa-solid fa-xmark text-gold sort-close"></i>
+              <i id="sort-close" class="fa-solid fa-xmark text-grey sort-close"></i>
             </div>
           </div>
           <div class="row">
@@ -115,6 +115,21 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="search-view" class=" background-texture hidden">
+      <div id="search-container">
+        <div class="row center">
+          <div class="col-search">
+            <form id="search-entries-form" action="">
+              <input id="search-entries-input" class="background-texture text-gold"
+                type="text" placeholder="Search">
+            </form>
+          </div>
+          <div class="col-5">
+            <i id="search-close" class="fa-solid fa-xmark text-grey search-close"></i>
           </div>
         </div>
       </div>

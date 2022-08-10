@@ -5,18 +5,28 @@ getMaterials();
 getEquipment();
 getTreasure();
 
-// Global Dom Selectors
+// Document Variables
+var $appBody = document.body;
+var windowXCoord, windowYCoord;
+
+// Entry Variables/Events
+var $compediumEntries = document.querySelector('#compendium-entries');
 var $entryRow = document.querySelector('#entry-row');
 $entryRow.addEventListener('click', clickEntry);
 
-var $detailRow = document.querySelector('#detail-row');
-
+// Navigation Variables/Events
+var $appHeader = document.querySelector('#app-header');
 var $navigationIcons = document.querySelectorAll('.nav-icon');
+var $navIconContainer = document.querySelector('#navigation-icons');
+$appHeader.addEventListener('click', initializeCompendium);
 addEventList($navigationIcons, 'click', navigationClick);
 
+// Entry Details Variables/Events
+var $detailRow = document.querySelector('#detail-row');
 var $detailOverlay = document.querySelector('.detail-overlay');
 $detailOverlay.addEventListener('click', clickDetailOverlay);
 
+// Sort Variables/Events
 var $navSort = document.querySelector('#nav-sort');
 var $sortToggle = document.querySelector('#sort-toggle');
 var $sortToggleBox = document.querySelector('#sort-toggle-box');
@@ -33,12 +43,40 @@ $dropDownSortChoice.addEventListener('click', clickDownDownSort);
 $sortOverlay.addEventListener('click', clickSortOverlay);
 $sortClose.addEventListener('click', toggleSortView);
 
-// Entry Functionality
+// Search Variables/Events
+var $navSearch = document.querySelector('#nav-search');
+var $searchView = document.querySelector('#search-view');
+var $searchClose = document.querySelector('#search-close');
+var $searchEntriesInput = document.querySelector('#search-entries-input');
+$navSearch.addEventListener('click', toggleSearch);
+$searchClose.addEventListener('click', toggleSearch);
 
+// Navigation Functionality
+function navigationClick(event) {
+  if (event.target.className !== 'nav-icon') {
+    return;
+  }
+  data.currentNavIcon.classList.remove('nav-icon-selected');
+  data.currentNavIcon = event.target;
+  data.currentNavIcon.classList.add('nav-icon-selected');
+  data.pageView = event.target.id;
+  renderControl();
+}
+
+function toggleNavigationIconsView() {
+  if ($navIconContainer.classList.contains('hidden')) {
+    $navIconContainer.classList.remove('hidden');
+  } else {
+    $navIconContainer.classList.add('hidden');
+  }
+
+}
+
+// Entry Detail Functionality
 function clickEntry(event) {
   event.stopPropagation();
   data.entryView = data.compendium[event.target.closest('.entry-container').getAttribute('dataid') - 1];
-  openDetail();
+  toggleDetailView();
 }
 
 function clickDetailOverlay(event) {
@@ -46,28 +84,35 @@ function clickDetailOverlay(event) {
     return;
   }
   event.stopPropagation();
-  closeDetail();
+  toggleDetailView();
 }
 
-function openDetail() {
-  $detailOverlay.classList.remove('hidden');
-  $detailRow.appendChild(renderDetail(data.entryView));
-  renderDetailLocations(data.entryView);
-  renderDetailAttributes(data.entryView, ['drops', 'cooking_effect', 'attack', 'defense']);
-  var $closeDetail = document.querySelector('.modal-close');
-  $closeDetail.addEventListener('click', closeDetail);
-}
-
-function closeDetail() {
-  data.entryView = null;
-  $detailOverlay.classList.add('hidden');
-  if ($detailRow.childElementCount !== 0) {
-    removeAllChildren($detailRow);
+function toggleDetailView() {
+  if ($detailOverlay.classList.contains('hidden')) {
+    if (data.searchView) {
+      toggleSearchView();
+    }
+    $detailOverlay.classList.remove('hidden');
+    $appBody.classList.add('stop-background-scroll');
+    $detailRow.appendChild(renderDetail(data.entryView));
+    renderDetailLocations(data.entryView);
+    renderDetailAttributes(data.entryView, ['drops', 'cooking_effect', 'attack', 'defense']);
+    var $closeDetail = document.querySelector('.modal-close');
+    $closeDetail.addEventListener('click', toggleDetailView);
+  } else {
+    if (data.searchView) {
+      toggleSearchView();
+    }
+    data.entryView = null;
+    $detailOverlay.classList.add('hidden');
+    $appBody.classList.remove('stop-background-scroll');
+    if ($detailRow.childElementCount !== 0) {
+      removeAllChildren($detailRow);
+    }
   }
 }
 
 // Sort Functionality
-
 function clickSort(event) {
   if (event.target.getAttribute('id') !== 'nav-sort') {
     return;
@@ -114,57 +159,292 @@ function clickDownDownSort(event) {
 function toggleOrder() {
   if (data.ascendSort) {
     $sortToggle.style.left = '2.8rem';
-    highlightArrowUp();
+    highlightArrowDown();
     data.ascendSort = false;
   } else {
     $sortToggle.style.left = '0';
-    highlightArrowDown();
+    highlightArrowUp();
     data.ascendSort = true;
   }
   renderControl();
 }
 
 function highlightArrowUp() {
-  $descendArrow.classList.add('text-gold');
-  $descendArrow.classList.remove('text-grey');
-  $ascendArrow.classList.remove('text-gold');
-  $ascendArrow.classList.add('text-grey');
+  $descendArrow.classList.replace('text-gold', 'text-grey');
+  $ascendArrow.classList.replace('text-grey', 'text-gold');
 }
 
 function highlightArrowDown() {
-  $ascendArrow.classList.add('text-gold');
-  $ascendArrow.classList.remove('text-grey');
-  $descendArrow.classList.remove('text-gold');
-  $descendArrow.classList.add('text-grey');
+  $descendArrow.classList.replace('text-grey', 'text-gold');
+  $ascendArrow.classList.replace('text-gold', 'text-grey');
 }
 
 function toggleSortView() {
   if ($sortOverlay.classList.contains('hidden')) {
     $sortOverlay.classList.remove('hidden');
+    $navSort.classList.replace('text-light-grey', 'text-gold');
+    $appBody.classList.add('stop-background-scroll');
   } else {
     $sortOverlay.classList.add('hidden');
+    $navSort.classList.replace('text-gold', 'text-light-grey');
+    $appBody.classList.remove('stop-background-scroll');
+
   }
   $sortRow.addEventListener('click', clickSortRow);
 }
 
-// Navigation Functionality
-function navigationClick(event) {
-  if (event.target.className !== 'nav-icon') {
-    return;
+// Search Functionality
+function toggleSearch() {
+  if (!data.searchView) {
+    toggleSearchView();
+    renderEntries(data.compendiumAlph);
+    data.searchView = true;
+    $searchEntriesInput.addEventListener('input', processSearchInput);
+  } else {
+    toggleSearchView();
+    $searchEntriesInput.value = '';
+    data.searchView = false;
+    renderControl();
   }
-  data.currentNavIcon.classList.remove('nav-icon-selected');
-  data.currentNavIcon = event.target;
-  data.currentNavIcon.classList.add('nav-icon-selected');
-  renderCategory(event.target.id);
 }
 
-function renderCategory(category) {
-  data.pageView = category;
+function processSearchInput(event) {
+  data.searchStr = $searchEntriesInput.value;
+  searchEntries();
+}
+
+function toggleSearchView() {
+  if ($searchView.classList.contains('hidden')) {
+    windowXCoord = window.pageXOffset;
+    windowYCoord = window.pageYOffset;
+    $searchView.classList.remove('hidden');
+    $compediumEntries.style['margin-top'] = '100px';
+    toggleNavigationIconsView();
+    window.scrollTo(0, 0);
+    $searchEntriesInput.focus();
+  } else {
+    $searchView.classList.add('hidden');
+    $compediumEntries.style['margin-top'] = '145px';
+    toggleNavigationIconsView();
+    window.scrollTo(windowXCoord, windowYCoord);
+  }
+}
+
+function searchEntries() {
+  data.searchResults = [];
+  for (let i = 0; i < data.compendiumAlph.length; i++) {
+    if (data.compendiumAlph[i].name.includes(data.searchStr)) {
+      data.searchResults.push(data.compendiumAlph[i]);
+    }
+  }
   renderControl();
 }
 
-// API Functionality
+// App Initialization/Reset
+function initializeCompendium() {
+  if (data.currentNavIcon !== null) {
+    data.currentNavIcon.classList.remove('nav-icon-selected');
+  }
+  data.currentNavIcon = $navigationIcons[0];
+  data.currentNavIcon.classList.add('nav-icon-selected');
 
+  data.pageView = 'creatures';
+  if (!data.ascendSort) {
+    data.ascendSort = true;
+    $sortToggle.style.left = '0';
+    highlightArrowUp();
+  }
+  if (!data.numSort) {
+    data.numSort = true;
+    $sortBtn.innerText = 'Number';
+    $dropDownSortChoice.textContent = 'Name';
+  }
+  data.entryView = null;
+  renderControl();
+}
+
+// Dom Render Functionality
+function createElement(tagName, attributes, children) {
+  var $element = document.createElement(tagName);
+  for (var name in attributes) {
+    $element.setAttribute(name, attributes[name]);
+  }
+  for (var i = 0; i < children.length; i++) {
+    if (children[i] instanceof HTMLElement) {
+      $element.appendChild(children[i]);
+    } else {
+      $element.appendChild(document.createTextNode(children[i]));
+    }
+  }
+  return $element;
+}
+
+function renderEntry(obj) {
+  var $compendiumEntry =
+    createElement('div', { class: 'col-full col-sm-half col-md-third col-lg-fourth entry-container', dataID: obj.id }, [
+      createElement('div', { class: 'entry-wrapper' }, [
+        createElement('div', { class: 'row' }, [
+          createElement('div', { class: 'col-img' }, [
+            createElement('div', { class: 'col-img-wrapper' }, [
+              createElement('img', { src: obj.image, class: 'block' }, [])
+            ])
+          ]),
+          createElement('div', { class: 'col-name' }, [
+            createElement('div', { class: 'col-name-wrapper' }, [
+              createElement('h3', { class: 'text-gold hylia-font' }, [obj.name]),
+              createElement('p', { class: 'text-blue hylia-font' }, [obj.id])
+            ])
+          ])
+        ])
+      ])
+    ]);
+  return $compendiumEntry;
+}
+
+function renderEntries(entryArr) {
+  if ($entryRow.childElementCount !== 0) {
+    removeAllChildren($entryRow);
+  }
+  for (let i = 0; i < entryArr.length; i++) {
+    $entryRow.appendChild(renderEntry(entryArr[i]));
+  }
+}
+
+function renderEntriesReverse(entryArr) {
+  if ($entryRow.childElementCount !== 0) {
+    removeAllChildren($entryRow);
+  }
+  for (let i = entryArr.length - 1; i >= 0; i--) {
+    $entryRow.appendChild(renderEntry(entryArr[i]));
+  }
+}
+
+function renderDetail(obj) {
+  var $entryDetail =
+    createElement('div', { class: 'col-modal' }, [
+      createElement('div', { class: 'detail-header' }, [
+        createElement('div', { class: 'row center space-between' }, [
+          createElement('div', { class: 'col-fluid detail-title' }, [
+            createElement('h2', { class: 'text-gold hylia-font' }, [
+              obj.name
+            ])
+          ]),
+          createElement('div', { class: 'col-fluid' }, [
+            createElement('div', { class: 'detail-close-wrapper' }, [
+              createElement('i', { class: 'fa-solid fa-xmark text-grey modal-close' }, [])
+            ])
+          ])
+        ])
+      ]),
+      createElement('div', { class: 'detail-body background-dark' }, [
+        createElement('div', { class: 'mobile-heart-wrapper align-right' }, [
+          createElement('i', { class: 'fas fa-heart mobile-heart' }, [])
+        ]),
+        createElement('div', { class: 'row wrap' }, [
+          createElement('div', { class: 'col-detail' }, [
+            createElement('div', { class: 'detail-image-wrapper align-center' }, [
+              createElement('img', { src: obj.image }, [])
+            ])
+          ]),
+          createElement('div', { class: 'col-detail' }, [
+            createElement('div', { class: 'detail-summary-wrapper' }, [
+              createElement('p', { class: 'text-gold segoe-font' }, [
+                obj.description
+              ])
+            ])
+          ])
+        ])
+      ]),
+      createElement('div', { class: 'detail-footer' }, [
+        createElement('div', { class: 'row wrap' }, [
+          createElement('div', { class: 'col-detail' }, [
+            createElement('div', { class: 'location-wrapper align-center' }, [
+              createElement('h2', { class: 'text-gold hylia-font' }, ['Common Locations'])
+            ])
+          ]),
+          createElement('div', { class: 'col-detail align-center' }, [
+            createElement('div', { class: 'detail-attribute-wrapper' }, [])
+          ])
+        ]),
+        createElement('div', { class: 'desktop-heart-wrapper align-right' }, [
+          createElement('i', { class: 'fas fa-heart desktop-heart' }, [])
+        ])
+      ])
+    ]);
+  return $entryDetail;
+}
+
+function renderDetailLocations(obj) {
+  var $locationWrapper = document.querySelector('.location-wrapper');
+  if (obj.common_locations !== null) {
+    for (let i = 0; i < obj.common_locations.length; i++) {
+      $locationWrapper.appendChild(createElement('p', { class: 'text-gold segoe-font' }, [obj.common_locations[i]]));
+    }
+  } else {
+    $locationWrapper.appendChild(createElement('p', { class: 'text-gold segoe-font' }, ['No Common Locations']));
+  }
+}
+
+function renderDetailAttributes(obj, attributes) {
+  var $attributeWrapper = document.querySelector('.detail-attribute-wrapper');
+
+  for (let i = 0; i < attributes.length; i++) {
+    if (attributes[i] in obj && obj[attributes[i]] !== 0) {
+      $attributeWrapper.appendChild(createElement('h2', { class: 'text-gold hylia-font' }, [titleAttribute(attributes[i])]));
+      if (obj[attributes[i]] !== null) {
+        if (obj[attributes[i]].length !== 0) {
+          if (Array.isArray(obj[attributes[i]])) {
+            for (let j = 0; j < obj[attributes[i]].length; j++) {
+              $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, [obj[attributes[i]][j]]));
+            }
+          } else {
+            $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, [obj[attributes[i]]]));
+          }
+        } else {
+          $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, ['None']));
+        }
+      } else {
+        $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, ['Rare Unknown']));
+      }
+    }
+  }
+}
+
+function renderControl() {
+
+  if (data.searchView) {
+    renderEntries(data.searchResults);
+    return;
+  }
+  if (data.numSort) {
+    if (data.ascendSort) {
+      renderEntries(data[data.pageView]);
+    } else {
+      renderEntriesReverse(data[data.pageView]);
+    }
+  } else {
+    if (data.ascendSort) {
+      renderEntries(data[data.pageView + 'Alph']);
+    } else {
+      renderEntriesReverse(data[data.pageView + 'Alph']);
+    }
+  }
+}
+
+// General Dom Functionality
+function removeAllChildren(parent) {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+}
+
+function addEventList(list, event, fnct) {
+  for (let i = 0; i < list.length; i++) {
+    list[i].addEventListener(event, fnct);
+  }
+}
+
+// API Functionality
 function getCreatures() {
   var creatureRequest = new XMLHttpRequest();
   creatureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/creatures');
@@ -201,8 +481,7 @@ function getCreatures() {
     });
 
     // Render creatures entries on page load by defualt
-    data.currentNavIcon = $navigationIcons[0];
-    renderEntries(data.creatures);
+    initializeCompendium();
   });
   creatureRequest.send();
 }
@@ -328,186 +607,7 @@ function getTreasure() {
   treasureRequest.send();
 }
 
-// Dom Render Functionality
-
-function createElement(tagName, attributes, children) {
-  var $element = document.createElement(tagName);
-  for (var name in attributes) {
-    $element.setAttribute(name, attributes[name]);
-  }
-  for (var i = 0; i < children.length; i++) {
-    if (children[i] instanceof HTMLElement) {
-      $element.appendChild(children[i]);
-    } else {
-      $element.appendChild(document.createTextNode(children[i]));
-    }
-  }
-  return $element;
-}
-
-function renderEntry(obj) {
-  var $compendiumEntry =
-    createElement('div', { class: 'col-full col-sm-half col-md-third col-lg-fourth entry-container', dataID: obj.id }, [
-      createElement('div', { class: 'entry-wrapper' }, [
-        createElement('div', { class: 'row' }, [
-          createElement('div', { class: 'col-img' }, [
-            createElement('div', { class: 'col-img-wrapper' }, [
-              createElement('img', { src: obj.image, class: 'block' }, [])
-            ])
-          ]),
-          createElement('div', { class: 'col-name' }, [
-            createElement('div', { class: 'col-name-wrapper' }, [
-              createElement('h3', { class: 'text-gold hylia-font' }, [obj.name]),
-              createElement('p', { class: 'text-blue hylia-font' }, [obj.id])
-            ])
-          ])
-        ])
-      ])
-    ]);
-  return $compendiumEntry;
-}
-
-function renderControl() {
-  if (data.numSort) {
-    if (data.ascendSort) {
-      renderEntries(data[data.pageView]);
-    } else {
-      renderEntriesReverse(data[data.pageView]);
-    }
-  } else {
-    if (data.ascendSort) {
-      renderEntries(data[data.pageView + 'Alph']);
-    } else {
-      renderEntriesReverse(data[data.pageView + 'Alph']);
-    }
-  }
-}
-
-function renderEntries(entryArr) {
-  if ($entryRow.childElementCount !== 0) {
-    removeAllChildren($entryRow);
-  }
-  for (let i = 0; i < entryArr.length; i++) {
-    $entryRow.appendChild(renderEntry(entryArr[i]));
-  }
-}
-
-function renderEntriesReverse(entryArr) {
-  if ($entryRow.childElementCount !== 0) {
-    removeAllChildren($entryRow);
-  }
-  for (let i = entryArr.length - 1; i >= 0; i--) {
-    $entryRow.appendChild(renderEntry(entryArr[i]));
-  }
-}
-
-function renderDetail(obj) {
-  var $entryDetail =
-    createElement('div', { class: 'col-modal' }, [
-      createElement('div', { class: 'detail-header' }, [
-        createElement('div', { class: 'row center space-between' }, [
-          createElement('div', { class: 'col-fluid detail-title' }, [
-            createElement('h2', { class: 'text-gold hylia-font' }, [
-              obj.name
-            ])
-          ]),
-          createElement('div', { class: 'col-fluid' }, [
-            createElement('div', { class: 'detail-close-wrapper' }, [
-              createElement('i', { class: 'fa-solid fa-xmark text-gold modal-close' }, [])
-            ])
-          ])
-        ])
-      ]),
-      createElement('div', { class: 'detail-body background-dark' }, [
-        createElement('div', { class: 'mobile-heart-wrapper align-right' }, [
-          createElement('i', { class: 'fas fa-heart mobile-heart' }, [])
-        ]),
-        createElement('div', { class: 'row wrap' }, [
-          createElement('div', { class: 'col-detail' }, [
-            createElement('div', { class: 'detail-image-wrapper align-center' }, [
-              createElement('img', { src: obj.image }, [])
-            ])
-          ]),
-          createElement('div', { class: 'col-detail' }, [
-            createElement('div', { class: 'detail-summary-wrapper' }, [
-              createElement('p', { class: 'text-gold segoe-font' }, [
-                obj.description
-              ])
-            ])
-          ])
-        ])
-      ]),
-      createElement('div', { class: 'detail-footer' }, [
-        createElement('div', { class: 'row wrap' }, [
-          createElement('div', { class: 'col-detail' }, [
-            createElement('div', { class: 'location-wrapper align-center' }, [
-              createElement('h2', { class: 'text-gold hylia-font' }, ['Common Locations'])
-            ])
-          ]),
-          createElement('div', { class: 'col-detail align-center' }, [
-            createElement('div', { class: 'detail-attribute-wrapper' }, [])
-          ])
-        ]),
-        createElement('div', { class: 'desktop-heart-wrapper align-right' }, [
-          createElement('i', { class: 'fas fa-heart desktop-heart' }, [])
-        ])
-      ])
-    ]);
-  return $entryDetail;
-}
-
-function renderDetailLocations(obj) {
-  var $locationWrapper = document.querySelector('.location-wrapper');
-  if (obj.common_locations !== null) {
-    for (let i = 0; i < obj.common_locations.length; i++) {
-      $locationWrapper.appendChild(createElement('p', { class: 'text-gold segoe-font' }, [obj.common_locations[i]]));
-    }
-  } else {
-    $locationWrapper.appendChild(createElement('p', { class: 'text-gold segoe-font' }, ['No Common Locations']));
-  }
-}
-
-function renderDetailAttributes(obj, attributes) {
-  var $attributeWrapper = document.querySelector('.detail-attribute-wrapper');
-
-  for (let i = 0; i < attributes.length; i++) {
-    if (attributes[i] in obj && obj[attributes[i]] !== 0) {
-      $attributeWrapper.appendChild(createElement('h2', { class: 'text-gold hylia-font' }, [titleAttribute(attributes[i])]));
-      if (obj[attributes[i]] !== null) {
-        if (obj[attributes[i]].length !== 0) {
-          if (Array.isArray(obj[attributes[i]])) {
-            for (let j = 0; j < obj[attributes[i]].length; j++) {
-              $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, [obj[attributes[i]][j]]));
-            }
-          } else {
-            $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, [obj[attributes[i]]]));
-          }
-        } else {
-          $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, ['None']));
-        }
-      } else {
-        $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, ['Rare Unknown']));
-      }
-    }
-  }
-}
-
-// General Dom Functionality
-
-function removeAllChildren(parent) {
-  while (parent.firstChild) {
-    parent.removeChild(parent.firstChild);
-  }
-}
-
-function addEventList(list, event, fnct) {
-  for (let i = 0; i < list.length; i++) {
-    list[i].addEventListener(event, fnct);
-  }
-}
-
 // Case Specific Functionality
-
 function titleAttribute(str) {
   switch (str) {
     case 'drops':
@@ -515,9 +615,9 @@ function titleAttribute(str) {
     case 'cooking_effect':
       return 'Cooking Effect';
     case 'attack':
-      return 'Attack Stat';
+      return 'Attack Power';
     case 'defense':
-      return 'Defense Stat';
+      return 'Defense Power';
     default:
       return str;
   }

@@ -3,6 +3,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Utility */
+.stop-background-scroll {
+  overflow-y: hidden;
+}
+
 /* Header Styling */
 
 .nav-header {
@@ -14,9 +19,14 @@ html {
   top: 0;
 }
 
-#header-name {
+#app-header {
   margin: 0;
   font-size: 20px;
+  transition: transform 0.5s ease;
+}
+
+#app-header:hover {
+  transform: scale(1.1);
 }
 
 #header-icons {
@@ -33,18 +43,31 @@ html {
 }
 
 #nav-sort {
-  color: rgb(224, 209, 173);
   font-size: 1.5rem;
   transition: transform 0.5s ease;
 }
 
 #nav-sort:hover {
   transform: scale(1.2);
+  color: rgb(224, 209, 173);
+}
+
+#nav-search {
+  transition: transform 0.5s ease;
+}
+
+#nav-search:hover {
+  transform: scale(1.2);
 }
 
 #nav-heart {
   font-size: 1.5rem;
   color: red;
+  transition: transform 0.5s ease;
+}
+
+#nav-heart:hover {
+  transform: scale(1.2);
 }
 
 /* Navigation Icon Styling */
@@ -78,7 +101,7 @@ html {
 
 /* Entry Styling */
 
-.compendium-entries {
+#compendium-entries {
   margin-top: 145px;
 }
 
@@ -125,8 +148,12 @@ html {
 
 .detail-footer {
   padding: 0 2rem;
-  max-height: 400px;
+  max-height: 300px;
   overflow: scroll;
+}
+
+.modal-close:hover {
+  color: rgb(224, 209, 173);
 }
 
 /* Image Styling */
@@ -200,6 +227,10 @@ html {
   padding: 0 1rem;
 }
 
+#sort-close:hover {
+  color: rgb(224, 209, 173);
+}
+
 .toggle-wrapper {
   width: 60%;
   margin: auto;
@@ -227,6 +258,47 @@ html {
 
 .toggle-arrows {
   padding: 0 3rem;
+}
+
+/* Search Bar Syling */
+#search-view {
+  margin-top: 0;
+  padding: 1rem;
+  border-bottom: 1px solid rgb(224, 209, 173);
+  height: 62px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+#search-container {
+  max-width: 75%;
+  margin: auto;
+}
+
+#search-entries-form {
+  width: 95%;
+  margin: auto;
+  text-align: left;
+  background: url("../images/texture.jpeg");
+  border-bottom: 1px solid rgb(224, 209, 173);
+}
+
+#search-entries-input {
+  text-align: left;
+  width: 100%;
+  border-style: none;
+  height: 2rem;
+  font-size: 1.5rem;
+}
+
+#search-close:hover {
+  color: rgb(224, 209, 173);
+}
+
+input:focus {
+  outline: none;
 }
 
 /* General Alignment Styling */
@@ -259,6 +331,18 @@ html {
 
 .text-grey {
   color: grey;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-light-grey {
+  color: lightgray;
+}
+
+.text-underline {
+  text-decoration: underline;
 }
 
 .fa-xmark {
@@ -346,7 +430,7 @@ background-gold {
 @media only screen and (min-width: 700px) {
   .detail-footer {
     overflow: auto;
-    max-height: none;
+    max-height: 350px;
   }
 
   #sort-container {
@@ -359,7 +443,7 @@ background-gold {
     width: 40%;
     height: auto;
     position: relative;
-    top: 8rem;
+    top: 7rem;
   }
 
   .mobile-heart {

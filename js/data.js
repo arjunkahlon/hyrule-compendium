@@ -1,6 +1,7 @@
 /* exported data */
 var data = {
   pageView: 'creatures',
+  searchView: false,
   currentNavIcon: null,
   numSort: true,
   ascendSort: true,
@@ -17,5 +18,7 @@ var data = {
   monstersAlph: [],
   materialsAlph: [],
   equipmentAlph: [],
-  treasureAlph: []
+  treasureAlph: [],
+  searchResults: [],
+  searchStr: ''
 };
