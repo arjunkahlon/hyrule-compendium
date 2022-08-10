@@ -5,27 +5,28 @@ getMaterials();
 getEquipment();
 getTreasure();
 
-// Document Selectors
+// Document Variables
 var $appBody = document.body;
+var windowXCoord, windowYCoord;
 
-// Entry Selectors
+// Entry Variables/Events
 var $compediumEntries = document.querySelector('#compendium-entries');
 var $entryRow = document.querySelector('#entry-row');
 $entryRow.addEventListener('click', clickEntry);
 
-// Navigation Selectors
+// Navigation Variables/Events
 var $appHeader = document.querySelector('#app-header');
 var $navigationIcons = document.querySelectorAll('.nav-icon');
 var $navIconContainer = document.querySelector('#navigation-icons');
 $appHeader.addEventListener('click', initializeCompendium);
 addEventList($navigationIcons, 'click', navigationClick);
 
-// Entry Details Selectors
+// Entry Details Variables/Events
 var $detailRow = document.querySelector('#detail-row');
 var $detailOverlay = document.querySelector('.detail-overlay');
 $detailOverlay.addEventListener('click', clickDetailOverlay);
 
-// Sort Selectors
+// Sort Variables/Events
 var $navSort = document.querySelector('#nav-sort');
 var $sortToggle = document.querySelector('#sort-toggle');
 var $sortToggleBox = document.querySelector('#sort-toggle-box');
@@ -42,7 +43,7 @@ $dropDownSortChoice.addEventListener('click', clickDownDownSort);
 $sortOverlay.addEventListener('click', clickSortOverlay);
 $sortClose.addEventListener('click', toggleSortView);
 
-// Search Selectors
+// Search Variables/Events
 var $navSearch = document.querySelector('#nav-search');
 var $searchView = document.querySelector('#search-view');
 var $searchClose = document.querySelector('#search-close');
@@ -214,14 +215,18 @@ function processSearchInput(event) {
 
 function toggleSearchView() {
   if ($searchView.classList.contains('hidden')) {
+    windowXCoord = window.pageXOffset;
+    windowYCoord = window.pageYOffset;
     $searchView.classList.remove('hidden');
     $compediumEntries.style['margin-top'] = '100px';
     toggleNavigationIconsView();
+    window.scrollTo(0, 0);
     $searchEntriesInput.focus();
   } else {
     $searchView.classList.add('hidden');
     $compediumEntries.style['margin-top'] = '145px';
     toggleNavigationIconsView();
+    window.scrollTo(windowXCoord, windowYCoord);
   }
 }
 
