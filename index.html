@@ -60,7 +60,7 @@
         </div>
       </div>
     </section>
-    <section class="compendium-entries">
+    <section id="compendium-entries">
       <div id="rendered-entries" data-view="creatures" >
         <div class="row wrap" id="entry-row"></div>
       </div>
@@ -80,7 +80,7 @@
               </div>
             </div>
             <div class="col-fluid">
-              <i id="sort-close" class="fa-solid fa-xmark text-gold sort-close"></i>
+              <i id="sort-close" class="fa-solid fa-xmark text-grey sort-close"></i>
             </div>
           </div>
           <div class="row">
@@ -120,12 +120,17 @@
       </div>
     </div>
     <div id="search-view" class=" background-texture hidden">
-      <div class="row">
-        <div class="col-full">
-          <form id="search-entries-form" action="">
-            <input id="search-entries-input" class="background-texture text-gold"
-              type="text" placeholder="Search">
-          </form>
+      <div id="search-container">
+        <div class="row center">
+          <div class="col-search">
+            <form id="search-entries-form" action="">
+              <input id="search-entries-input" class="background-texture text-gold"
+                type="text" placeholder="Search">
+            </form>
+          </div>
+          <div class="col-5">
+            <i id="search-close" class="fa-solid fa-xmark text-grey search-close"></i>
+          </div>
         </div>
       </div>
     </div>

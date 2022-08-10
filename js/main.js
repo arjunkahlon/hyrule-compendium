@@ -9,12 +9,14 @@ getTreasure();
 var $appBody = document.body;
 
 // Entry Selectors
+var $compediumEntries = document.querySelector('#compendium-entries');
 var $entryRow = document.querySelector('#entry-row');
 $entryRow.addEventListener('click', clickEntry);
 
 // Navigation Selectors
 var $appHeader = document.querySelector('#app-header');
 var $navigationIcons = document.querySelectorAll('.nav-icon');
+var $navIconContainer = document.querySelector('#navigation-icons');
 $appHeader.addEventListener('click', initializeCompendium);
 addEventList($navigationIcons, 'click', navigationClick);
 
@@ -43,7 +45,10 @@ $sortClose.addEventListener('click', toggleSortView);
 // Search Selectors
 var $navSearch = document.querySelector('#nav-search');
 var $searchView = document.querySelector('#search-view');
-$navSearch.addEventListener('click', toggleSearchView);
+var $searchClose = document.querySelector('#search-close');
+var $searchEntriesInput = document.querySelector('#search-entries-input');
+$navSearch.addEventListener('click', toggleSearch);
+$searchClose.addEventListener('click', toggleSearch);
 
 // Navigation Functionality
 function navigationClick(event) {
@@ -53,12 +58,17 @@ function navigationClick(event) {
   data.currentNavIcon.classList.remove('nav-icon-selected');
   data.currentNavIcon = event.target;
   data.currentNavIcon.classList.add('nav-icon-selected');
-  renderCategory(event.target.id);
+  data.pageView = event.target.id;
+  renderControl();
 }
 
-function renderCategory(category) {
-  data.pageView = category;
-  renderControl();
+function toggleNavigationIconsView() {
+  if ($navIconContainer.classList.contains('hidden')) {
+    $navIconContainer.classList.remove('hidden');
+  } else {
+    $navIconContainer.classList.add('hidden');
+  }
+
 }
 
 // Entry Detail Functionality
@@ -78,6 +88,9 @@ function clickDetailOverlay(event) {
 
 function toggleDetailView() {
   if ($detailOverlay.classList.contains('hidden')) {
+    if (data.searchView) {
+      toggleSearchView();
+    }
     $detailOverlay.classList.remove('hidden');
     $appBody.classList.add('stop-background-scroll');
     $detailRow.appendChild(renderDetail(data.entryView));
@@ -86,6 +99,9 @@ function toggleDetailView() {
     var $closeDetail = document.querySelector('.modal-close');
     $closeDetail.addEventListener('click', toggleDetailView);
   } else {
+    if (data.searchView) {
+      toggleSearchView();
+    }
     data.entryView = null;
     $detailOverlay.classList.add('hidden');
     $appBody.classList.remove('stop-background-scroll');
@@ -177,14 +193,69 @@ function toggleSortView() {
 }
 
 // Search Functionality
+function toggleSearch() {
+  if (!data.searchView) {
+    toggleSearchView();
+    renderEntries(data.compendiumAlph);
+    data.searchView = true;
+    $searchEntriesInput.addEventListener('input', processSearchInput);
+  } else {
+    toggleSearchView();
+    $searchEntriesInput.value = '';
+    data.searchView = false;
+    renderControl();
+  }
+}
+
+function processSearchInput(event) {
+  data.searchStr = $searchEntriesInput.value;
+  searchEntries();
+}
 
 function toggleSearchView() {
   if ($searchView.classList.contains('hidden')) {
     $searchView.classList.remove('hidden');
+    $compediumEntries.style['margin-top'] = '100px';
+    toggleNavigationIconsView();
+    $searchEntriesInput.focus();
   } else {
     $searchView.classList.add('hidden');
+    $compediumEntries.style['margin-top'] = '145px';
+    toggleNavigationIconsView();
   }
+}
 
+function searchEntries() {
+  data.searchResults = [];
+  for (let i = 0; i < data.compendiumAlph.length; i++) {
+    if (data.compendiumAlph[i].name.includes(data.searchStr)) {
+      data.searchResults.push(data.compendiumAlph[i]);
+    }
+  }
+  renderControl();
+}
+
+// App Initialization/Reset
+function initializeCompendium() {
+  if (data.currentNavIcon !== null) {
+    data.currentNavIcon.classList.remove('nav-icon-selected');
+  }
+  data.currentNavIcon = $navigationIcons[0];
+  data.currentNavIcon.classList.add('nav-icon-selected');
+
+  data.pageView = 'creatures';
+  if (!data.ascendSort) {
+    data.ascendSort = true;
+    $sortToggle.style.left = '0';
+    highlightArrowUp();
+  }
+  if (!data.numSort) {
+    data.numSort = true;
+    $sortBtn.innerText = 'Number';
+    $dropDownSortChoice.textContent = 'Name';
+  }
+  data.entryView = null;
+  renderControl();
 }
 
 // Dom Render Functionality
@@ -225,22 +296,6 @@ function renderEntry(obj) {
   return $compendiumEntry;
 }
 
-function renderControl() {
-  if (data.numSort) {
-    if (data.ascendSort) {
-      renderEntries(data[data.pageView]);
-    } else {
-      renderEntriesReverse(data[data.pageView]);
-    }
-  } else {
-    if (data.ascendSort) {
-      renderEntries(data[data.pageView + 'Alph']);
-    } else {
-      renderEntriesReverse(data[data.pageView + 'Alph']);
-    }
-  }
-}
-
 function renderEntries(entryArr) {
   if ($entryRow.childElementCount !== 0) {
     removeAllChildren($entryRow);
@@ -271,7 +326,7 @@ function renderDetail(obj) {
           ]),
           createElement('div', { class: 'col-fluid' }, [
             createElement('div', { class: 'detail-close-wrapper' }, [
-              createElement('i', { class: 'fa-solid fa-xmark text-gold modal-close' }, [])
+              createElement('i', { class: 'fa-solid fa-xmark text-grey modal-close' }, [])
             ])
           ])
         ])
@@ -350,6 +405,27 @@ function renderDetailAttributes(obj, attributes) {
   }
 }
 
+function renderControl() {
+
+  if (data.searchView) {
+    renderEntries(data.searchResults);
+    return;
+  }
+  if (data.numSort) {
+    if (data.ascendSort) {
+      renderEntries(data[data.pageView]);
+    } else {
+      renderEntriesReverse(data[data.pageView]);
+    }
+  } else {
+    if (data.ascendSort) {
+      renderEntries(data[data.pageView + 'Alph']);
+    } else {
+      renderEntriesReverse(data[data.pageView + 'Alph']);
+    }
+  }
+}
+
 // General Dom Functionality
 function removeAllChildren(parent) {
   while (parent.firstChild) {
@@ -403,28 +479,6 @@ function getCreatures() {
     initializeCompendium();
   });
   creatureRequest.send();
-}
-
-function initializeCompendium() {
-  if (data.currentNavIcon !== null) {
-    data.currentNavIcon.classList.remove('nav-icon-selected');
-  }
-  data.currentNavIcon = $navigationIcons[0];
-  data.currentNavIcon.classList.add('nav-icon-selected');
-
-  data.pageView = 'creatures';
-  if (!data.ascendSort) {
-    data.ascendSort = true;
-    $sortToggle.style.left = '0';
-    highlightArrowUp();
-  }
-  if (!data.numSort) {
-    data.numSort = true;
-    $sortBtn.innerText = 'Number';
-    $dropDownSortChoice.textContent = 'Name';
-  }
-  data.entryView = null;
-  renderControl();
 }
 
 function getMonsters() {

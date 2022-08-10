@@ -49,6 +49,7 @@ html {
 
 #nav-sort:hover {
   transform: scale(1.2);
+  color: rgb(224, 209, 173);
 }
 
 #nav-search {
@@ -100,7 +101,7 @@ html {
 
 /* Entry Styling */
 
-.compendium-entries {
+#compendium-entries {
   margin-top: 145px;
 }
 
@@ -149,6 +150,10 @@ html {
   padding: 0 2rem;
   max-height: 300px;
   overflow: scroll;
+}
+
+.modal-close:hover {
+  color: rgb(224, 209, 173);
 }
 
 /* Image Styling */
@@ -222,6 +227,10 @@ html {
   padding: 0 1rem;
 }
 
+#sort-close:hover {
+  color: rgb(224, 209, 173);
+}
+
 .toggle-wrapper {
   width: 60%;
   margin: auto;
@@ -263,10 +272,15 @@ html {
   left: 0;
 }
 
-#search-entries-form {
-  width: 75%;
+#search-container {
+  max-width: 75%;
   margin: auto;
-  text-align: center;
+}
+
+#search-entries-form {
+  width: 95%;
+  margin: auto;
+  text-align: left;
   background: url("../images/texture.jpeg");
   border-bottom: 1px solid rgb(224, 209, 173);
 }
@@ -274,10 +288,13 @@ html {
 #search-entries-input {
   text-align: left;
   width: 100%;
-  margin: auto;
   border-style: none;
   height: 2rem;
   font-size: 1.5rem;
+}
+
+#search-close:hover {
+  color: rgb(224, 209, 173);
 }
 
 input:focus {
