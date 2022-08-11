@@ -274,6 +274,8 @@ html {
 
 #search-container {
   max-width: 75%;
+  max-height: 100%;
+  overflow: scroll;
   margin: auto;
 }
 
@@ -299,6 +301,22 @@ html {
 
 input:focus {
   outline: none;
+}
+
+/* Favorites Selectors */
+
+#favorites-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  margin: auto;
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+.favorites-view-heart {
+  font-size: 2rem;
+  margin-top: 1rem;
 }
 
 /* General Alignment Styling */
@@ -327,6 +345,10 @@ input:focus {
 
 .text-blue {
   color: rgb(135, 164, 206);
+}
+
+.text-red {
+  color: red;
 }
 
 .text-grey {
@@ -418,7 +440,8 @@ background-gold {
   background-color: rgba(0, 0, 0, 0.85);
 }
 
-.sort-overlay {
+.sort-overlay,
+.favorites-overlay {
   position: fixed;
   top: 62px;
   left: 0;
@@ -435,6 +458,15 @@ background-gold {
 
   #sort-container {
     border-left: 1px solid rgb(224, 209, 173);
+  }
+}
+
+@media only screen and (min-width: 1100px) {
+  #favorites-container {
+    width: 25rem;
+    height: 100%;
+    position: absolute;
+    margin: auto;
   }
 }
 

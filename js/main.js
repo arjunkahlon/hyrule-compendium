@@ -51,6 +51,8 @@ var $searchEntriesInput = document.querySelector('#search-entries-input');
 $navSearch.addEventListener('click', toggleSearch);
 $searchClose.addEventListener('click', toggleSearch);
 
+// Favorites Variables/Events
+var $favoritesEntryRow = document.querySelector('#favorites-row');
 // Navigation Functionality
 function navigationClick(event) {
   if (event.target.className !== 'nav-icon') {
@@ -407,6 +409,45 @@ function renderDetailAttributes(obj, attributes) {
         $attributeWrapper.appendChild(createElement('p', { class: 'capitalize text-gold segoe-font' }, ['Rare Unknown']));
       }
     }
+  }
+}
+
+function renderFavoriteEntry(obj) {
+  var $compendiumFavorite =
+    createElement('div', { class: 'col-full', dataID: obj.id }, [
+      createElement('div', { class: 'entry-wrapper' }, [
+        createElement('div', { class: 'row' }, [
+          createElement('div', { class: 'col-img' }, [
+            createElement('div', { class: 'col-img-wrapper' }, [
+              createElement('img', { src: obj.image, class: 'block' }, [])
+            ])
+          ]),
+          createElement('div', { class: 'col-name' }, [
+            createElement('div', { class: 'col-name-wrapper' }, [
+              createElement('h3', { class: 'text-gold hylia-font' }, [obj.name]),
+              createElement('span', { class: 'text-blue hylia-font' }, [obj.id])
+            ])
+          ]),
+          createElement('i', { class: 'in-line fas fa-heart text-red align-right favorites-view-heart' }, [])
+        ])
+      ])
+    ]);
+  return $compendiumFavorite;
+}
+
+renderFavoriteEntries();
+
+function renderFavoriteEntries() {
+  if (data.favorites.length === 0) {
+    return;
+  }
+
+  if ($favoritesEntryRow.childElementCount !== 0) {
+    removeAllChildren($favoritesEntryRow);
+  }
+
+  for (let i = 0; i < data.favorites.length; i++) {
+    $favoritesEntryRow.appendChild(renderFavoriteEntry(data.favorites[i]));
   }
 }
 
