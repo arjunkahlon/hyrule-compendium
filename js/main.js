@@ -52,7 +52,14 @@ $navSearch.addEventListener('click', toggleSearch);
 $searchClose.addEventListener('click', toggleSearch);
 
 // Favorites Variables/Events
+var $navHeart = document.querySelector('#nav-heart');
+var $favoritesView = document.querySelector('#favorites-view');
 var $favoritesEntryRow = document.querySelector('#favorites-row');
+var $favoritesContainerRow = document.querySelector('#favorites-container-row');
+var $favoritesOverlay = document.querySelector('.favorites-overlay');
+$navHeart.addEventListener('click', toggleFavorites);
+$favoritesOverlay.addEventListener('click', clickFavoritesOverlay);
+
 // Navigation Functionality
 function navigationClick(event) {
   if (event.target.className !== 'nav-icon') {
@@ -97,6 +104,7 @@ function toggleDetailView() {
     $detailOverlay.classList.remove('hidden');
     $appBody.classList.add('stop-background-scroll');
     $detailRow.appendChild(renderDetail(data.entryView));
+    manageDetailFavorites();
     renderDetailLocations(data.entryView);
     renderDetailAttributes(data.entryView, ['drops', 'cooking_effect', 'attack', 'defense']);
     var $closeDetail = document.querySelector('.modal-close');
@@ -111,6 +119,30 @@ function toggleDetailView() {
     if ($detailRow.childElementCount !== 0) {
       removeAllChildren($detailRow);
     }
+  }
+}
+
+function manageDetailFavorites() {
+  var $desktopHeart = document.querySelector('.desktop-heart');
+  var $mobileHeart = document.querySelector('.mobile-heart');
+  $mobileHeart.addEventListener('click', clickDetailFavorite);
+  $desktopHeart.addEventListener('click', clickDetailFavorite);
+  if (entryInFavorites()) {
+    $mobileHeart.classList.replace('text-grey', 'text-red');
+    $desktopHeart.classList.replace('text-grey', 'text-red');
+  }
+
+}
+
+function clickDetailFavorite(event) {
+  if (event.target.tagName !== 'I') {
+    return;
+  }
+  if (event.target.classList.contains('text-grey')) {
+    event.target.classList.replace('text-grey', 'text-red');
+    data.favorites.push(data.entryView);
+  } else {
+    event.target.classList.replace('text-red', 'text-grey');
   }
 }
 
@@ -340,7 +372,7 @@ function renderDetail(obj) {
       ]),
       createElement('div', { class: 'detail-body background-dark' }, [
         createElement('div', { class: 'mobile-heart-wrapper align-right' }, [
-          createElement('i', { class: 'fas fa-heart mobile-heart' }, [])
+          createElement('i', { class: 'fas fa-heart mobile-heart text-grey' }, [])
         ]),
         createElement('div', { class: 'row wrap' }, [
           createElement('div', { class: 'col-detail' }, [
@@ -369,7 +401,7 @@ function renderDetail(obj) {
           ])
         ]),
         createElement('div', { class: 'desktop-heart-wrapper align-right' }, [
-          createElement('i', { class: 'fas fa-heart desktop-heart' }, [])
+          createElement('i', { class: 'fas fa-heart desktop-heart text-grey' }, [])
         ])
       ])
     ]);
@@ -435,8 +467,6 @@ function renderFavoriteEntry(obj) {
   return $compendiumFavorite;
 }
 
-renderFavoriteEntries();
-
 function renderFavoriteEntries() {
   if (data.favorites.length === 0) {
     return;
@@ -470,6 +500,47 @@ function renderControl() {
       renderEntriesReverse(data[data.pageView + 'Alph']);
     }
   }
+}
+
+// Favorites Functionality
+
+function toggleFavorites(event) {
+  if (event.target.getAttribute('id') !== 'nav-heart') {
+    return;
+  }
+  renderFavoriteEntries();
+  toggleFavoritesView();
+}
+
+function toggleFavoritesView() {
+  if ($favoritesView.classList.contains('hidden')) {
+    $favoritesView.classList.remove('hidden');
+  } else {
+    $favoritesView.classList.add('hidden');
+  }
+  $favoritesContainerRow.addEventListener('click', clickFavoritesRow);
+}
+
+function clickFavoritesOverlay(event) {
+  if (event.target.className !== 'favorites-overlay') {
+    return;
+  }
+  event.stopPropagation();
+  toggleFavoritesView();
+}
+
+function clickFavoritesRow(event) {
+  if (event.target.getAttribute('id') !== 'favorites-container-row') {
+    return;
+  }
+  toggleFavoritesView();
+}
+
+function entryInFavorites() {
+  if (data.favorites.includes(data.entryView)) {
+    return true;
+  }
+  return false;
 }
 
 // General Dom Functionality

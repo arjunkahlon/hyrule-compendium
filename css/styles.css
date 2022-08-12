@@ -275,7 +275,6 @@ html {
 #search-container {
   max-width: 75%;
   max-height: 100%;
-  overflow: scroll;
   margin: auto;
 }
 
@@ -373,14 +372,12 @@ input:focus {
 
 .mobile-heart {
   font-size: 2rem;
-  color: grey;
   position: fixed;
   right: 1rem;
 }
 
 .desktop-heart {
   font-size: 2rem;
-  color: grey;
   display: none;
 }
 
