@@ -57,8 +57,10 @@ var $favoritesView = document.querySelector('#favorites-view');
 var $favoritesEntryRow = document.querySelector('#favorites-row');
 var $favoritesContainerRow = document.querySelector('#favorites-container-row');
 var $favoritesOverlay = document.querySelector('.favorites-overlay');
+var $favoritesClose = document.querySelector('#favorites-close');
 $navHeart.addEventListener('click', toggleFavorites);
 $favoritesOverlay.addEventListener('click', clickFavoritesOverlay);
+$favoritesClose.addEventListener('click', toggleFavoritesView);
 
 // Navigation Functionality
 function navigationClick(event) {
@@ -141,8 +143,9 @@ function clickDetailFavorite(event) {
   if (event.target.classList.contains('text-grey')) {
     event.target.classList.replace('text-grey', 'text-red');
     data.favorites.push(data.entryView);
-  } else {
+  } else if (event.target.classList.contains('text-red')) {
     event.target.classList.replace('text-red', 'text-grey');
+    deleteFavorite(data.entryView.id);
   }
 }
 
@@ -460,7 +463,7 @@ function renderFavoriteEntry(obj) {
               createElement('span', { class: 'text-blue hylia-font' }, [obj.id])
             ])
           ]),
-          createElement('i', { class: 'in-line fas fa-heart text-red align-right favorites-view-heart' }, [])
+          createElement('i', { class: 'in-line fas fa-heart text-red align-right favorites-view-heart', heartid: obj.id }, [])
         ])
       ])
     ]);
@@ -468,13 +471,7 @@ function renderFavoriteEntry(obj) {
 }
 
 function renderFavoriteEntries() {
-  if (data.favorites.length === 0) {
-    return;
-  }
-
-  if ($favoritesEntryRow.childElementCount !== 0) {
-    removeAllChildren($favoritesEntryRow);
-  }
+  removeAllChildren($favoritesEntryRow);
 
   for (let i = 0; i < data.favorites.length; i++) {
     $favoritesEntryRow.appendChild(renderFavoriteEntry(data.favorites[i]));
@@ -515,10 +512,26 @@ function toggleFavorites(event) {
 function toggleFavoritesView() {
   if ($favoritesView.classList.contains('hidden')) {
     $favoritesView.classList.remove('hidden');
+    if (data.favorites.length > 0) {
+      var $favoriteHeartList = document.querySelectorAll('.favorites-view-heart');
+      addEventList($favoriteHeartList, 'click', clickFavoritesViewHeart);
+    }
   } else {
     $favoritesView.classList.add('hidden');
   }
   $favoritesContainerRow.addEventListener('click', clickFavoritesRow);
+}
+
+function clickFavoritesViewHeart(event) {
+  if (event.target.tagName !== 'I') {
+    return;
+  }
+  if (event.target.classList.contains('text-red')) {
+    event.target.classList.replace('text-red', 'text-grey');
+    var $domDelete = event.target.closest('.col-full');
+    deleteFavorite(parseInt($domDelete.getAttribute('dataid')));
+    $domDelete.remove();
+  }
 }
 
 function clickFavoritesOverlay(event) {
@@ -541,6 +554,14 @@ function entryInFavorites() {
     return true;
   }
   return false;
+}
+
+function deleteFavorite(id) {
+  for (let i = 0; i < data.favorites.length; i++) {
+    if (data.favorites[i].id === id) {
+      data.favorites.splice(i, 1);
+    }
+  }
 }
 
 // General Dom Functionality
