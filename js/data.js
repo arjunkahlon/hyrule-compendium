@@ -22,3 +22,15 @@ var data = {
   searchResults: [],
   searchStr: ''
 };
+
+var previousFavorites = localStorage.getItem('hyrule-local-storage');
+if (previousFavorites != null) {
+  data.favorites = JSON.parse(previousFavorites);
+}
+
+window.addEventListener('beforeunload', storeFavorites);
+
+function storeFavorites() {
+  var saveFavorites = JSON.stringify(data.favorites);
+  localStorage.setItem('hyrule-local-storage', saveFavorites);
+}
