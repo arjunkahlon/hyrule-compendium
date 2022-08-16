@@ -480,7 +480,7 @@ background-gold {
 @media only screen and (min-width: 700px) {
   .detail-footer {
     overflow: auto;
-    max-height: 350px;
+    max-height: 320px;
   }
 
   #sort-container {
