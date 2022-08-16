@@ -122,6 +122,10 @@ html {
   box-shadow: inset 0 0 0 0.5px rgb(224, 209, 173);
 }
 
+.entry-toggle {
+  display: none;
+}
+
 /* Entry Detail Styling */
 .detail-modal {
   width: 100%;
@@ -477,6 +481,10 @@ background-gold {
     height: auto;
     position: relative;
     top: 7rem;
+  }
+
+  .entry-toggle {
+    display: flex;
   }
 
   .mobile-heart {

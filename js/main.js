@@ -6,37 +6,38 @@ getEquipment();
 getTreasure();
 
 // Document Variables
-var $appBody = document.body;
-var windowXCoord, windowYCoord;
+const $appBody = document.body;
+let windowXCoord = 0;
+let windowYCoord = 0;
 
 // Entry Variables/Events
-var $compediumEntries = document.querySelector('#compendium-entries');
-var $entryRow = document.querySelector('#entry-row');
+const $compediumEntries = document.querySelector('#compendium-entries');
+const $entryRow = document.querySelector('#entry-row');
 $entryRow.addEventListener('click', clickEntry);
 
 // Navigation Variables/Events
-var $appHeader = document.querySelector('#app-header');
-var $navigationIcons = document.querySelectorAll('.nav-icon');
-var $navIconContainer = document.querySelector('#navigation-icons');
+const $appHeader = document.querySelector('#app-header');
+const $navigationIcons = document.querySelectorAll('.nav-icon');
+const $navIconContainer = document.querySelector('#navigation-icons');
 $appHeader.addEventListener('click', initializeCompendium);
 addEventList($navigationIcons, 'click', navigationClick);
 
 // Entry Details Variables/Events
-var $detailRow = document.querySelector('#detail-row');
-var $detailOverlay = document.querySelector('.detail-overlay');
+const $detailRow = document.querySelector('#detail-row');
+const $detailOverlay = document.querySelector('.detail-overlay');
 $detailOverlay.addEventListener('click', clickDetailOverlay);
 
 // Sort Variables/Events
-var $navSort = document.querySelector('#nav-sort');
-var $sortToggle = document.querySelector('#sort-toggle');
-var $sortToggleBox = document.querySelector('#sort-toggle-box');
-var $sortRow = document.querySelector('#sort-row');
-var $ascendArrow = document.querySelector('#ascend-arrow');
-var $descendArrow = document.querySelector('#descend-arrow');
-var $sortBtn = document.querySelector('.sort-btn');
-var $dropDownSortChoice = document.querySelector('#dropdown-sort-choice');
-var $sortOverlay = document.querySelector('.sort-overlay');
-var $sortClose = document.querySelector('#sort-close');
+const $navSort = document.querySelector('#nav-sort');
+const $sortToggle = document.querySelector('#sort-toggle');
+const $sortToggleBox = document.querySelector('#sort-toggle-box');
+const $sortRow = document.querySelector('#sort-row');
+const $ascendArrow = document.querySelector('#ascend-arrow');
+const $descendArrow = document.querySelector('#descend-arrow');
+const $sortBtn = document.querySelector('.sort-btn');
+const $dropDownSortChoice = document.querySelector('#dropdown-sort-choice');
+const $sortOverlay = document.querySelector('.sort-overlay');
+const $sortClose = document.querySelector('#sort-close');
 $navSort.addEventListener('click', clickSort);
 $sortToggleBox.addEventListener('click', clickSortToggle);
 $dropDownSortChoice.addEventListener('click', clickDownDownSort);
@@ -44,20 +45,20 @@ $sortOverlay.addEventListener('click', clickSortOverlay);
 $sortClose.addEventListener('click', toggleSortView);
 
 // Search Variables/Events
-var $navSearch = document.querySelector('#nav-search');
-var $searchView = document.querySelector('#search-view');
-var $searchClose = document.querySelector('#search-close');
-var $searchEntriesInput = document.querySelector('#search-entries-input');
+const $navSearch = document.querySelector('#nav-search');
+const $searchView = document.querySelector('#search-view');
+const $searchClose = document.querySelector('#search-close');
+const $searchEntriesInput = document.querySelector('#search-entries-input');
 $navSearch.addEventListener('click', toggleSearch);
 $searchClose.addEventListener('click', toggleSearch);
 
 // Favorites Variables/Events
-var $navHeart = document.querySelector('#nav-heart');
-var $favoritesView = document.querySelector('#favorites-view');
-var $favoritesEntryRow = document.querySelector('#favorites-row');
-var $favoritesContainerRow = document.querySelector('#favorites-container-row');
-var $favoritesOverlay = document.querySelector('.favorites-overlay');
-var $favoritesClose = document.querySelector('#favorites-close');
+const $navHeart = document.querySelector('#nav-heart');
+const $favoritesView = document.querySelector('#favorites-view');
+const $favoritesEntryRow = document.querySelector('#favorites-row');
+const $favoritesContainerRow = document.querySelector('#favorites-container-row');
+const $favoritesOverlay = document.querySelector('.favorites-overlay');
+const $favoritesClose = document.querySelector('#favorites-close');
 $navHeart.addEventListener('click', toggleFavorites);
 $favoritesOverlay.addEventListener('click', clickFavoritesOverlay);
 $favoritesClose.addEventListener('click', toggleFavoritesView);
@@ -105,11 +106,12 @@ function toggleDetailView() {
     }
     $detailOverlay.classList.remove('hidden');
     $appBody.classList.add('stop-background-scroll');
+    $entryRow.classList.add('entry-toggle');
     $detailRow.appendChild(renderDetail(data.entryView));
     manageDetailFavorites();
     renderDetailLocations(data.entryView);
     renderDetailAttributes(data.entryView, ['drops', 'cooking_effect', 'attack', 'defense']);
-    var $closeDetail = document.querySelector('.modal-close');
+    const $closeDetail = document.querySelector('.modal-close');
     $closeDetail.addEventListener('click', toggleDetailView);
   } else {
     if (data.searchView) {
@@ -118,6 +120,7 @@ function toggleDetailView() {
     data.entryView = null;
     $detailOverlay.classList.add('hidden');
     $appBody.classList.remove('stop-background-scroll');
+    $entryRow.classList.remove('entry-toggle');
     if ($detailRow.childElementCount !== 0) {
       removeAllChildren($detailRow);
     }
@@ -125,8 +128,8 @@ function toggleDetailView() {
 }
 
 function manageDetailFavorites() {
-  var $desktopHeart = document.querySelector('.desktop-heart');
-  var $mobileHeart = document.querySelector('.mobile-heart');
+  const $desktopHeart = document.querySelector('.desktop-heart');
+  const $mobileHeart = document.querySelector('.mobile-heart');
   $mobileHeart.addEventListener('click', clickDetailFavorite);
   $desktopHeart.addEventListener('click', clickDetailFavorite);
   if (entryInFavorites()) {
@@ -234,11 +237,15 @@ function toggleSortView() {
 function toggleSearch() {
   if (!data.searchView) {
     toggleSearchView();
+    windowXCoord = window.pageXOffset;
+    windowYCoord = window.pageYOffset;
+    window.scrollTo(0, 0);
     renderEntries(data.compendiumAlph);
     data.searchView = true;
     $searchEntriesInput.addEventListener('input', processSearchInput);
   } else {
     toggleSearchView();
+    window.scrollTo(windowXCoord, windowYCoord);
     $searchEntriesInput.value = '';
     data.searchView = false;
     renderControl();
@@ -252,18 +259,14 @@ function processSearchInput(event) {
 
 function toggleSearchView() {
   if ($searchView.classList.contains('hidden')) {
-    windowXCoord = window.pageXOffset;
-    windowYCoord = window.pageYOffset;
     $searchView.classList.remove('hidden');
     $compediumEntries.style['margin-top'] = '100px';
     toggleNavigationIconsView();
-    window.scrollTo(0, 0);
     $searchEntriesInput.focus();
   } else {
     $searchView.classList.add('hidden');
     $compediumEntries.style['margin-top'] = '145px';
     toggleNavigationIconsView();
-    window.scrollTo(windowXCoord, windowYCoord);
   }
 }
 
@@ -302,11 +305,11 @@ function initializeCompendium() {
 
 // Dom Render Functionality
 function createElement(tagName, attributes, children) {
-  var $element = document.createElement(tagName);
-  for (var name in attributes) {
+  const $element = document.createElement(tagName);
+  for (const name in attributes) {
     $element.setAttribute(name, attributes[name]);
   }
-  for (var i = 0; i < children.length; i++) {
+  for (let i = 0; i < children.length; i++) {
     if (children[i] instanceof HTMLElement) {
       $element.appendChild(children[i]);
     } else {
@@ -317,7 +320,7 @@ function createElement(tagName, attributes, children) {
 }
 
 function renderEntry(obj) {
-  var $compendiumEntry =
+  const $compendiumEntry =
     createElement('div', { class: 'col-full col-sm-half col-md-third col-lg-fourth entry-container', dataID: obj.id }, [
       createElement('div', { class: 'entry-wrapper' }, [
         createElement('div', { class: 'row' }, [
@@ -357,7 +360,7 @@ function renderEntriesReverse(entryArr) {
 }
 
 function renderDetail(obj) {
-  var $entryDetail =
+  const $entryDetail =
     createElement('div', { class: 'col-modal' }, [
       createElement('div', { class: 'detail-header' }, [
         createElement('div', { class: 'row center space-between' }, [
@@ -412,7 +415,7 @@ function renderDetail(obj) {
 }
 
 function renderDetailLocations(obj) {
-  var $locationWrapper = document.querySelector('.location-wrapper');
+  const $locationWrapper = document.querySelector('.location-wrapper');
   if (obj.common_locations !== null) {
     for (let i = 0; i < obj.common_locations.length; i++) {
       $locationWrapper.appendChild(createElement('p', { class: 'text-gold segoe-font' }, [obj.common_locations[i]]));
@@ -423,7 +426,7 @@ function renderDetailLocations(obj) {
 }
 
 function renderDetailAttributes(obj, attributes) {
-  var $attributeWrapper = document.querySelector('.detail-attribute-wrapper');
+  const $attributeWrapper = document.querySelector('.detail-attribute-wrapper');
 
   for (let i = 0; i < attributes.length; i++) {
     if (attributes[i] in obj && obj[attributes[i]] !== 0) {
@@ -448,7 +451,7 @@ function renderDetailAttributes(obj, attributes) {
 }
 
 function renderFavoriteEntry(obj) {
-  var $compendiumFavorite =
+  const $compendiumFavorite =
     createElement('div', { class: 'col-full', dataID: obj.id }, [
       createElement('div', { class: 'entry-wrapper' }, [
         createElement('div', { class: 'row' }, [
@@ -513,7 +516,7 @@ function toggleFavoritesView() {
   if ($favoritesView.classList.contains('hidden')) {
     $favoritesView.classList.remove('hidden');
     if (data.favorites.length > 0) {
-      var $favoriteHeartList = document.querySelectorAll('.favorites-view-heart');
+      const $favoriteHeartList = document.querySelectorAll('.favorites-view-heart');
       addEventList($favoriteHeartList, 'click', clickFavoritesViewHeart);
     }
   } else {
@@ -528,7 +531,7 @@ function clickFavoritesViewHeart(event) {
   }
   if (event.target.classList.contains('text-red')) {
     event.target.classList.replace('text-red', 'text-grey');
-    var $domDelete = event.target.closest('.col-full');
+    const $domDelete = event.target.closest('.col-full');
     deleteFavorite(parseInt($domDelete.getAttribute('dataid')));
     $domDelete.remove();
   }
@@ -579,7 +582,7 @@ function addEventList(list, event, fnct) {
 
 // API Functionality
 function getCreatures() {
-  var creatureRequest = new XMLHttpRequest();
+  const creatureRequest = new XMLHttpRequest();
   creatureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/creatures');
   creatureRequest.responseType = 'json';
   creatureRequest.addEventListener('load', function () {
@@ -620,7 +623,7 @@ function getCreatures() {
 }
 
 function getMonsters() {
-  var monsterRequest = new XMLHttpRequest();
+  const monsterRequest = new XMLHttpRequest();
   monsterRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/monsters');
   monsterRequest.responseType = 'json';
   monsterRequest.addEventListener('load', function () {
@@ -650,7 +653,7 @@ function getMonsters() {
 }
 
 function getMaterials() {
-  var materialRequest = new XMLHttpRequest();
+  const materialRequest = new XMLHttpRequest();
   materialRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/materials');
   materialRequest.responseType = 'json';
   materialRequest.addEventListener('load', function () {
@@ -680,7 +683,7 @@ function getMaterials() {
 }
 
 function getEquipment() {
-  var equipmentRequest = new XMLHttpRequest();
+  const equipmentRequest = new XMLHttpRequest();
   equipmentRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/equipment');
   equipmentRequest.responseType = 'json';
   equipmentRequest.addEventListener('load', function () {
@@ -710,7 +713,7 @@ function getEquipment() {
 }
 
 function getTreasure() {
-  var treasureRequest = new XMLHttpRequest();
+  const treasureRequest = new XMLHttpRequest();
   treasureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/treasure');
   treasureRequest.responseType = 'json';
   treasureRequest.addEventListener('load', function () {
