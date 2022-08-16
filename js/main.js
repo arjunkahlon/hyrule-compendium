@@ -13,6 +13,7 @@ let windowYCoord = 0;
 // Entry Variables/Events
 const $compediumEntries = document.querySelector('#compendium-entries');
 const $entryRow = document.querySelector('#entry-row');
+const $entryPlaceholder = document.querySelector('#no-entry-placeholder');
 $entryRow.addEventListener('click', clickEntry);
 
 // Navigation Variables/Events
@@ -345,6 +346,12 @@ function renderEntries(entryArr) {
   if ($entryRow.childElementCount !== 0) {
     removeAllChildren($entryRow);
   }
+
+  if (entryArr.length === 0) {
+    $entryPlaceholder.classList.remove('hidden');
+    return;
+  }
+  $entryPlaceholder.classList.add('hidden');
   for (let i = 0; i < entryArr.length; i++) {
     $entryRow.appendChild(renderEntry(entryArr[i]));
   }

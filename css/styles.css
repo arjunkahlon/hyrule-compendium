@@ -173,6 +173,16 @@ html {
   height: 230px;
 }
 
+#placeholder-image-wrapper {
+  width: 400px;
+  margin: auto;
+}
+
+#placeholder-image {
+  width: 300px;
+  height: auto;
+}
+
 /* Sort Entries Styling */
 
 #sort-row {
@@ -405,6 +415,18 @@ input:focus {
 
 .segoe-font {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.font-small {
+  font-size: 0.5rem;
+}
+
+.font-normal {
+  font-size: 1rem;
+}
+
+.font-large {
+  font-size: 2rem;
 }
 
 @font-face {
