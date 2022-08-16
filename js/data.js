@@ -1,5 +1,5 @@
 /* exported data */
-var data = {
+const data = {
   pageView: 'creatures',
   searchView: false,
   currentNavIcon: null,
@@ -23,7 +23,7 @@ var data = {
   searchStr: ''
 };
 
-var previousFavorites = localStorage.getItem('hyrule-local-storage');
+const previousFavorites = localStorage.getItem('hyrule-local-storage');
 if (previousFavorites != null) {
   data.favorites = JSON.parse(previousFavorites);
 }
@@ -31,6 +31,6 @@ if (previousFavorites != null) {
 window.addEventListener('beforeunload', storeFavorites);
 
 function storeFavorites() {
-  var saveFavorites = JSON.stringify(data.favorites);
+  const saveFavorites = JSON.stringify(data.favorites);
   localStorage.setItem('hyrule-local-storage', saveFavorites);
 }
