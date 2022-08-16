@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AJAX Project</title>
+  <title>Hyrule Compendium</title>
   <link rel="icon" href="images/favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
@@ -63,6 +63,16 @@
     <section id="compendium-entries">
       <div id="rendered-entries" data-view="creatures" >
         <div class="row wrap" id="entry-row"></div>
+        <div class="row hidden" id="no-entry-placeholder">
+          <div class="col-full">
+            <div id="placeholder-text-wrapper" class="align-center">
+              <p class="hylia-font font-large text-gold">No entries</p>
+            </div>
+            <div id="placeholder-image-wrapper" class="align-center">
+              <img id="placeholder-image" src="./images/makar.png" alt="placeholder image">
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     <div id="detail-view" class="detail-overlay hidden">
