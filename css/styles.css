@@ -465,6 +465,7 @@ background-gold {
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.85);
+  overflow: scroll;
 }
 
 .sort-overlay,
@@ -485,6 +486,12 @@ background-gold {
 
   #sort-container {
     border-left: 1px solid rgb(224, 209, 173);
+  }
+}
+
+@media only screen and (min-height: 500px) {
+  .detail-overlay {
+    overflow: hidden;
   }
 }
 
