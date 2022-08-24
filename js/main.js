@@ -26,7 +26,13 @@ addEventList($navigationIcons, 'click', navigationClick);
 // Entry Details Variables/Events
 const $detailRow = document.querySelector('#detail-row');
 const $detailOverlay = document.querySelector('.detail-overlay');
-$detailOverlay.addEventListener('click', clickDetailOverlay);
+$detailOverlay.addEventListener('click', event => {
+  if (event.target.className !== 'detail-overlay') {
+    return;
+  }
+  event.stopPropagation();
+  toggleDetailView();
+});
 
 // Sort Variables/Events
 const $navSort = document.querySelector('#nav-sort');
@@ -40,9 +46,18 @@ const $dropDownSortChoice = document.querySelector('#dropdown-sort-choice');
 const $sortOverlay = document.querySelector('.sort-overlay');
 const $sortClose = document.querySelector('#sort-close');
 $navSort.addEventListener('click', clickSort);
-$sortToggleBox.addEventListener('click', clickSortToggle);
+$sortToggleBox.addEventListener('click', event => {
+  event.stopPropagation();
+  toggleOrder();
+});
 $dropDownSortChoice.addEventListener('click', clickDownDownSort);
-$sortOverlay.addEventListener('click', clickSortOverlay);
+$sortOverlay.addEventListener('click', event => {
+  if (event.target.className !== 'sort-overlay') {
+    return;
+  }
+  event.stopPropagation();
+  toggleSortView();
+});
 $sortClose.addEventListener('click', toggleSortView);
 
 // Search Variables/Events
@@ -61,7 +76,13 @@ const $favoritesContainerRow = document.querySelector('#favorites-container-row'
 const $favoritesOverlay = document.querySelector('.favorites-overlay');
 const $favoritesClose = document.querySelector('#favorites-close');
 $navHeart.addEventListener('click', toggleFavorites);
-$favoritesOverlay.addEventListener('click', clickFavoritesOverlay);
+$favoritesOverlay.addEventListener('click', event => {
+  if (event.target.className !== 'favorites-overlay') {
+    return;
+  }
+  event.stopPropagation();
+  toggleFavoritesView();
+});
 $favoritesClose.addEventListener('click', toggleFavoritesView);
 
 // Navigation Functionality
@@ -82,21 +103,12 @@ function toggleNavigationIconsView() {
   } else {
     $navIconContainer.classList.add('hidden');
   }
-
 }
 
 // Entry Detail Functionality
 function clickEntry(event) {
   event.stopPropagation();
   data.entryView = data.compendium[event.target.closest('.entry-container').getAttribute('dataid') - 1];
-  toggleDetailView();
-}
-
-function clickDetailOverlay(event) {
-  if (event.target.className !== 'detail-overlay') {
-    return;
-  }
-  event.stopPropagation();
   toggleDetailView();
 }
 
@@ -161,26 +173,6 @@ function clickSort(event) {
   toggleSortView();
 }
 
-function clickSortToggle(event) {
-  event.stopPropagation();
-  toggleOrder();
-}
-
-function clickSortOverlay(event) {
-  if (event.target.className !== 'sort-overlay') {
-    return;
-  }
-  event.stopPropagation();
-  toggleSortView();
-}
-
-function clickSortRow(event) {
-  if (event.target.getAttribute('id') !== 'sort-row') {
-    return;
-  }
-  toggleSortView();
-}
-
 function clickDownDownSort(event) {
   if (event.target.tagName !== 'SPAN') {
     return;
@@ -231,7 +223,12 @@ function toggleSortView() {
     $appBody.classList.remove('stop-background-scroll');
 
   }
-  $sortRow.addEventListener('click', clickSortRow);
+  $sortRow.addEventListener('click', event => {
+    if (event.target.getAttribute('id') !== 'sort-row') {
+      return;
+    }
+    toggleSortView();
+  });
 }
 
 // Search Functionality
@@ -529,7 +526,12 @@ function toggleFavoritesView() {
   } else {
     $favoritesView.classList.add('hidden');
   }
-  $favoritesContainerRow.addEventListener('click', clickFavoritesRow);
+  $favoritesContainerRow.addEventListener('click', event => {
+    if (event.target.getAttribute('id') !== 'favorites-container-row') {
+      return;
+    }
+    toggleFavoritesView();
+  });
 }
 
 function clickFavoritesViewHeart(event) {
@@ -542,21 +544,6 @@ function clickFavoritesViewHeart(event) {
     deleteFavorite(parseInt($domDelete.getAttribute('dataid')));
     $domDelete.remove();
   }
-}
-
-function clickFavoritesOverlay(event) {
-  if (event.target.className !== 'favorites-overlay') {
-    return;
-  }
-  event.stopPropagation();
-  toggleFavoritesView();
-}
-
-function clickFavoritesRow(event) {
-  if (event.target.getAttribute('id') !== 'favorites-container-row') {
-    return;
-  }
-  toggleFavoritesView();
 }
 
 function entryInFavorites() {
