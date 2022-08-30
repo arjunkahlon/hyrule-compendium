@@ -2,4 +2,4 @@
 
 A dynamic HTML, CSS, and JavaScript solo project.
 
-Link to live web application: https://arjunkahlon.github.io/ajax-project/
+Link to live web application: https://arjunkahlon.github.io/hyrule-compendium/
