@@ -1,10 +1,3 @@
-// API Calls.
-getCreatures();
-getMonsters();
-getMaterials();
-getEquipment();
-getTreasure();
-
 // Document Variables
 const $appBody = document.body;
 let windowXCoord = 0;
@@ -84,6 +77,17 @@ $favoritesOverlay.addEventListener('click', event => {
   toggleFavoritesView();
 });
 $favoritesClose.addEventListener('click', toggleFavoritesView);
+
+// Network Activity Selectors
+const $loadSpinner = document.querySelector('#load-spinner');
+const $errorContainer = document.querySelector('#error-container');
+
+// API Calls.
+getCreatures();
+getMonsters();
+getMaterials();
+getEquipment();
+getTreasure();
 
 // Navigation Functionality
 function navigationClick(event) {
@@ -577,9 +581,18 @@ function addEventList(list, event, fnct) {
 // API Functionality
 function getCreatures() {
   const creatureRequest = new XMLHttpRequest();
+  $loadSpinner.classList.remove('hidden');
   creatureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/creatures');
   creatureRequest.responseType = 'json';
   creatureRequest.addEventListener('load', function () {
+    $loadSpinner.classList.add('hidden');
+
+    if (creatureRequest.status !== 200 ||
+        creatureRequest.response.data.food.length === 0) {
+      $errorContainer.classList.remove('hidden');
+      return;
+    }
+
     for (let i = 0; i < creatureRequest.response.data.food.length; i++) {
       data.creatures.push(creatureRequest.response.data.food[i]);
       data.creaturesAlph.push(creatureRequest.response.data.food[i]);
@@ -613,6 +626,7 @@ function getCreatures() {
     // Render creatures entries on page load by defualt
     initializeCompendium();
   });
+
   creatureRequest.send();
 }
 
@@ -621,6 +635,13 @@ function getMonsters() {
   monsterRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/monsters');
   monsterRequest.responseType = 'json';
   monsterRequest.addEventListener('load', function () {
+
+    if (monsterRequest.status !== 200 ||
+        monsterRequest.response.data.length === 0) {
+      $errorContainer.classList.remove('hidden');
+      return;
+    }
+
     for (let i = 0; i < monsterRequest.response.data.length; i++) {
       data.monsters.push(monsterRequest.response.data[i]);
       data.monstersAlph.push(monsterRequest.response.data[i]);
@@ -651,6 +672,13 @@ function getMaterials() {
   materialRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/materials');
   materialRequest.responseType = 'json';
   materialRequest.addEventListener('load', function () {
+
+    if (materialRequest.status !== 200 ||
+        materialRequest.response.data.length === 0) {
+      $errorContainer.classList.remove('hidden');
+      return;
+    }
+
     for (let i = 0; i < materialRequest.response.data.length; i++) {
       data.materials.push(materialRequest.response.data[i]);
       data.materialsAlph.push(materialRequest.response.data[i]);
@@ -681,6 +709,13 @@ function getEquipment() {
   equipmentRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/equipment');
   equipmentRequest.responseType = 'json';
   equipmentRequest.addEventListener('load', function () {
+
+    if (equipmentRequest.status !== 200 ||
+        equipmentRequest.response.data.length === 0) {
+      $errorContainer.classList.remove('hidden');
+      return;
+    }
+
     for (let i = 0; i < equipmentRequest.response.data.length; i++) {
       data.equipment.push(equipmentRequest.response.data[i]);
       data.equipmentAlph.push(equipmentRequest.response.data[i]);
@@ -711,6 +746,13 @@ function getTreasure() {
   treasureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/treasure');
   treasureRequest.responseType = 'json';
   treasureRequest.addEventListener('load', function () {
+
+    if (treasureRequest.status !== 200 ||
+        treasureRequest.response.data.length === 0) {
+      $errorContainer.classList.remove('hidden');
+      return;
+    }
+
     for (let i = 0; i < treasureRequest.response.data.length; i++) {
       data.treasure.push(treasureRequest.response.data[i]);
       data.treasureAlph.push(treasureRequest.response.data[i]);
