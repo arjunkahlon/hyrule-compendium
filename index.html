@@ -73,6 +73,24 @@
             </div>
           </div>
         </div>
+        <div id="load-spinner" class="align-center background-dark hidden m-top-3">
+          <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+        <div id="error-container" class="error-overlay row center hidden">
+          <div class="error-modal-wrapper col-half">
+            <div class="error-modal background-texture">
+              <p class="text-gold hylia-font">Could not connect to the server. Please try again later</p>
+              <div class="error-image-wrapper">
+                <img src="./images/makar.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     <div id="detail-view" class="detail-overlay hidden">
@@ -99,7 +117,6 @@
                 <button class="sort-btn">Number</button>
                 <div class="dropdown-content">
                   <span id="dropdown-sort-choice" class="align-center">Name</span>
-                  <!-- <span id="dropdown-name" class="align-center">Name</span> -->
                 </div>
               </div>
             </div>
