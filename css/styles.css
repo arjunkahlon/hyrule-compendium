@@ -16,26 +16,6 @@ i.delete-icon,
   overflow-y: hidden;
 }
 
-.p-top-1 {
-  padding-top: 1rem;
-}
-
-.p-top-2 {
-  padding-top: 2rem;
-}
-
-.p-top-3 {
-  padding-top: 3rem;
-}
-
-.m-top-1 {
-  margin-top: 1rem;
-}
-
-.m-top-2 {
-  margin-top: 2rem;
-}
-
 .m-top-3 {
   margin-top: 3rem;
 }
@@ -383,10 +363,6 @@ input:focus {
   text-align: right;
 }
 
-.align-left {
-  text-align: left;
-}
-
 .remove-line-height {
   line-height: 0;
 }
@@ -409,16 +385,8 @@ input:focus {
   color: grey;
 }
 
-.text-white {
-  color: white;
-}
-
 .text-light-grey {
   color: lightgray;
-}
-
-.text-underline {
-  text-decoration: underline;
 }
 
 .fa-xmark {
@@ -446,20 +414,8 @@ input:focus {
   font-family: "Hylia Serif", sans-serif;
 }
 
-.aerial-font {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 .segoe-font {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.font-small {
-  font-size: 0.5rem;
-}
-
-.font-normal {
-  font-size: 1rem;
 }
 
 .font-large {
@@ -473,24 +429,12 @@ input:focus {
 
 /* Background Styling */
 
-.background-black {
-  background-color: black;
-}
-
-.background-grey {
-  background-color: rgb(20, 20, 22);
-}
-
 .background-texture {
   background-image: url("../images/texture.jpeg");
 }
 
 .background-dark {
   background-color: rgb(26, 20, 20);
-}
-
-background-gold {
-  background-color: rgb(224, 209, 173);
 }
 
 /* Overlay Styling */
@@ -585,6 +529,8 @@ background-gold {
     display: inline;
   }
 }
+
+/* Network Indicator Styling */
 
 .lds-ring {
   display: inline-block;
