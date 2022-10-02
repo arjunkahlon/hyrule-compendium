@@ -29,6 +29,7 @@ if (previousFavorites != null) {
 }
 
 window.addEventListener('beforeunload', storeFavorites);
+window.addEventList('pagehide', storeFavorites);
 
 function storeFavorites() {
   const saveFavorites = JSON.stringify(data.favorites);
