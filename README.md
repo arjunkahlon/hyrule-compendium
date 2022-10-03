@@ -1,10 +1,10 @@
 # Hyrule Compendium
 
-A web application built with HTML, vanilla CSS, and vanilla JavaScript that utilizes data obtained by the Hyrule Compendium API to generate an encyclopedia of the in-game creatures, monsters, materials, equipment, and treasure from The Legend of Zelda: Breath of the Wild.
+A web application built with HTML, vanilla CSS, and vanilla JavaScript that utilizes data obtained by the Hyrule Compendium API to generate an encyclopedia of the creatures, monsters, materials, equipment, and treasure from The Legend of Zelda: Breath of the Wild.
 
 ## Why I Built This
 
-I chose this project to improve upon my front-end web development skills, particularly responsive design, DOM manipulation, CSS styling/transitions, and JavaScript data manipulation. As a life-long fan of The Legend of Zelda, I found this project to be a wonderful development experience, as I got to create an interactive and visual display of one of my favorite video games of all time. 
+I chose this project to improve upon my front-end development skills, particularly responsive design, DOM manipulation, CSS styling/transitions, and JavaScript data manipulation. As a life-long fan of The Legend of Zelda, I found this project to be a wonderful development experience, as I got to create an interactive and visual display of one of my favorite video games of all time. 
 
 ## Technologies Used
 [Hyrule Compendium API](https://github.com/gadhagod/Hyrule-Compendium-API)
@@ -22,9 +22,15 @@ Application is hosted on my personal domain: https://hyrulecompendium.arjunkahlo
 
 - User can browse entries in the Compendium 
 - User can click on an entry to view its detailed view
-- User can sort entries by either name or number in both ascending and descending order
+- User can sort entries by either name or number in either ascending or descending order
 - User can search entries in the Compendium
 - User can favorite entries in the Compendium
+
+## Stretch Features
+
+- User can toggle between light and dark mode
+- User can click a Favorited Entry to view its summary directly below in an accordion implementation
+- User can view content from the upcoming 2023 Sequel: The Legend of Zelda: Tears of the Kingdom
 
 ## Preview
 #### User can Browse Entries
