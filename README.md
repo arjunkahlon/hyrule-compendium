@@ -33,3 +33,10 @@ Application is hosted on my personal domain: https://hyrulecompendium.arjunkahlo
 #### User can click on an entry to view its detailed view
 ![detail-view-1](https://user-images.githubusercontent.com/49361894/193670184-b460a507-0d0e-4fc5-ab99-a2cace3a6829.gif)
 ![detail-view-2](https://user-images.githubusercontent.com/49361894/193668701-2f260d85-622b-4e95-9c5d-f595a1d8d5a1.gif)
+
+#### User can sort entries by name or number, in either ascending or descending order. 
+![sort-1](https://user-images.githubusercontent.com/49361894/193674515-f890cc86-c255-48f6-9120-806c7b92aa7a.gif)
+
+### User can search the Hyrule Compendium
+![search-entries](https://user-images.githubusercontent.com/49361894/193677141-2ce3c180-9320-436c-a757-9ac8b0f26822.gif)
+
