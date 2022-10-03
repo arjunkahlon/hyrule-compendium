@@ -25,7 +25,7 @@ i.delete-icon,
 .nav-header {
   padding: 1rem;
   border-bottom: 1px solid rgb(224, 209, 173);
-  height: 62px;
+  height: 3.875rem;
   position: fixed;
   width: 100%;
   top: 0;
@@ -33,7 +33,7 @@ i.delete-icon,
 
 #app-header {
   margin: 0;
-  font-size: 20px;
+  font-size: 1.25rem;
   transition: transform 0.5s ease;
 }
 
@@ -50,8 +50,8 @@ i.delete-icon,
 }
 
 .header-icon-wrapper > img {
-  width: 25px;
-  height: 25px;
+  width: 1.563rem;
+  height: 1.563rem;
 }
 
 #nav-sort {
@@ -100,21 +100,21 @@ i.delete-icon,
 
 #navigation-icons {
   padding-top: 1rem;
-  height: 82px;
+  height: 5.125rem;
   position: fixed;
   width: 100%;
   top: 3.9rem;
 }
 
 .nav-icon-wrapper > img {
-  width: 47px;
-  height: 36px;
+  width: 2.938rem;
+  height: 2.25rem;
 }
 
 /* Entry Styling */
 
 #compendium-entries {
-  margin-top: 145px;
+  margin-top: 9.063rem;
 }
 
 #rendered-entries {
@@ -180,23 +180,23 @@ i.delete-icon,
 /* Image Styling */
 
 .col-img-wrapper > img {
-  width: 70px;
-  height: 70px;
+  width: 4.375rem;
+  height: 4.375rem;
   border-radius: 10%;
 }
 
 .detail-image-wrapper > img {
-  width: 230px;
-  height: 230px;
+  width: 14.375rem;
+  height: 14.375rem;
 }
 
 #placeholder-image-wrapper {
-  width: 400px;
+  width: 25rem;
   margin: auto;
 }
 
 #placeholder-image {
-  width: 300px;
+  width: 18.75rem;
   height: auto;
 }
 
@@ -240,7 +240,7 @@ i.delete-icon,
 
 .dropdown-content span {
   color: rgb(224, 209, 173);
-  padding: 12px 16px;
+  padding: 0.75rem 1rem;
   text-decoration: none;
   display: block;
 }
@@ -296,7 +296,7 @@ i.delete-icon,
   margin-top: 0;
   padding: 1rem;
   border-bottom: 1px solid rgb(224, 209, 173);
-  height: 62px;
+  height: 3.875rem;
   position: fixed;
   width: 100%;
   top: 0;
@@ -338,10 +338,12 @@ input:focus {
 #favorites-container {
   width: 100%;
   height: 100%;
+  overflow: auto;
   position: absolute;
   margin: auto;
-  padding-left: 3rem;
+  padding-left: 1rem;
   padding-right: 3rem;
+  padding-bottom: 5rem;
 }
 
 .favorites-view-heart {
@@ -390,7 +392,7 @@ input:focus {
 }
 
 .fa-xmark {
-  font-size: 26px;
+  font-size: 1.625rem;
 }
 
 .mobile-heart {
@@ -452,7 +454,7 @@ input:focus {
 .sort-overlay,
 .favorites-overlay {
   position: fixed;
-  top: 62px;
+  top: 3.875rem;
   left: 0;
   height: 100%;
   width: 100%;
@@ -485,7 +487,7 @@ input:focus {
 @media only screen and (min-width: 700px) {
   .detail-footer {
     overflow: auto;
-    max-height: 320px;
+    max-height: 20rem;
   }
 
   #sort-container {
@@ -535,17 +537,17 @@ input:focus {
 .lds-ring {
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 5rem;
+  height: 5rem;
 }
 
 .lds-ring div {
   box-sizing: border-box;
   display: block;
   position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
+  width: 4rem;
+  height: 4rem;
+  margin: 0.5rem;
   border: 8px solid rgb(17, 241, 115);
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
