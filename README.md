@@ -27,3 +27,9 @@ Application is hosted on my personal domain: https://hyrulecompendium.arjunkahlo
 - User can favorite entries in the Compendium
 
 ## Preview
+#### User can Browse Entries
+![browse-entries](https://user-images.githubusercontent.com/49361894/193668595-d7865546-4638-479b-b214-ec20a298470f.gif)
+
+#### User can click on an entry to view its detailed view
+![detail-view-1](https://user-images.githubusercontent.com/49361894/193670184-b460a507-0d0e-4fc5-ab99-a2cace3a6829.gif)
+![detail-view-2](https://user-images.githubusercontent.com/49361894/193668701-2f260d85-622b-4e95-9c5d-f595a1d8d5a1.gif)
