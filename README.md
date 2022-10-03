@@ -40,3 +40,15 @@ Application is hosted on my personal domain: https://hyrulecompendium.arjunkahlo
 ### User can search the Hyrule Compendium
 ![search-entries](https://user-images.githubusercontent.com/49361894/193677141-2ce3c180-9320-436c-a757-9ac8b0f26822.gif)
 
+## Getting Started
+
+1. Clone the repository 
+```
+git clone https://github.com/arjunkahlon/hyrule-compendium.git
+```
+2. Install dependencies with Node Package Manager
+```
+npm install
+```
+3. Open index.html in your browser
+
