@@ -482,7 +482,7 @@ input:focus {
 }
 
 .error-image-wrapper > img {
-  max-width: 40%;
+  max-width: 10rem;
 }
 
 @media only screen and (min-width: 700px) {
@@ -493,6 +493,14 @@ input:focus {
 
   #sort-container {
     border-left: 1px solid rgb(224, 209, 173);
+  }
+
+  .error-modal {
+    font-size: 1.5rem;
+  }
+
+  .error-image-wrapper > img {
+    max-width: 50rem;
   }
 }
 

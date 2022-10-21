@@ -627,6 +627,11 @@ function getCreatures() {
     initializeCompendium();
   });
 
+  creatureRequest.addEventListener('error', function () {
+    $loadSpinner.classList.add('hidden');
+    $errorContainer.classList.remove('hidden');
+  });
+
   creatureRequest.send();
 }
 
