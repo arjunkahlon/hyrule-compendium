@@ -582,29 +582,24 @@ function addEventList(list, event, fnct) {
 function getCreatures() {
   const creatureRequest = new XMLHttpRequest();
   $loadSpinner.classList.remove('hidden');
-  creatureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/creatures');
+  creatureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v3/compendium/category/creatures');
   creatureRequest.responseType = 'json';
   creatureRequest.addEventListener('load', function () {
     $loadSpinner.classList.add('hidden');
 
     if (creatureRequest.status !== 200 ||
-        creatureRequest.response.data.food.length === 0) {
+        creatureRequest.response.data.length === 0) {
       $errorContainer.classList.remove('hidden');
       return;
     }
 
-    for (let i = 0; i < creatureRequest.response.data.food.length; i++) {
-      data.creatures.push(creatureRequest.response.data.food[i]);
-      data.creaturesAlph.push(creatureRequest.response.data.food[i]);
-      data.compendium.push(creatureRequest.response.data.food[i]);
-      data.compendiumAlph.push(creatureRequest.response.data.food[i]);
+    for (let i = 0; i < creatureRequest.response.data.length; i++) {
+      data.creatures.push(creatureRequest.response.data[i]);
+      data.creaturesAlph.push(creatureRequest.response.data[i]);
+      data.compendium.push(creatureRequest.response.data[i]);
+      data.compendiumAlph.push(creatureRequest.response.data[i]);
     }
-    for (let i = 0; i < creatureRequest.response.data.non_food.length; i++) {
-      data.creatures.push(creatureRequest.response.data.non_food[i]);
-      data.creaturesAlph.push(creatureRequest.response.data.non_food[i]);
-      data.compendium.push(creatureRequest.response.data.non_food[i]);
-      data.compendiumAlph.push(creatureRequest.response.data.non_food[i]);
-    }
+
     // Sort creatures array by id
     data.creatures.sort(function (a, b) {
       return a.id - b.id;
@@ -637,7 +632,7 @@ function getCreatures() {
 
 function getMonsters() {
   const monsterRequest = new XMLHttpRequest();
-  monsterRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/monsters');
+  monsterRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v3/compendium/category/monsters');
   monsterRequest.responseType = 'json';
   monsterRequest.addEventListener('load', function () {
 
@@ -674,7 +669,7 @@ function getMonsters() {
 
 function getMaterials() {
   const materialRequest = new XMLHttpRequest();
-  materialRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/materials');
+  materialRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v3/compendium/category/materials');
   materialRequest.responseType = 'json';
   materialRequest.addEventListener('load', function () {
 
@@ -711,7 +706,7 @@ function getMaterials() {
 
 function getEquipment() {
   const equipmentRequest = new XMLHttpRequest();
-  equipmentRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/equipment');
+  equipmentRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v3/compendium/category/equipment');
   equipmentRequest.responseType = 'json';
   equipmentRequest.addEventListener('load', function () {
 
@@ -748,7 +743,7 @@ function getEquipment() {
 
 function getTreasure() {
   const treasureRequest = new XMLHttpRequest();
-  treasureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v2/category/treasure');
+  treasureRequest.open('GET', 'https://botw-compendium.herokuapp.com/api/v3/compendium/category/treasure');
   treasureRequest.responseType = 'json';
   treasureRequest.addEventListener('load', function () {
 
